@@ -2,7 +2,7 @@
 
 import os
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'userreport.settings'
 
 from userreport import maint
-maint.collect_graphics()
+maint.refresh_data()
