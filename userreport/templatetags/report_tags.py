@@ -57,15 +57,18 @@ def dictget(value, key):
 
 @register.filter
 def sorteditems(value):
-    return sorted(value.items(), key = lambda (k, v): k)
+    #return sorted(value.items(), key = lambda (k, v): k)
+    return value.items()
 
 @register.filter
 def sorteddeviceitems(value):
-    return sorted(value.items(), key = lambda (k, v): (k['vendor'], k['renderer'], k['os'], v))
+    #return sorted(value.items(), key = lambda (k, v): (k['vendor'], k['renderer'], k['os'], v))
+    return value.items()
 
 @register.filter
 def sortedcpuitems(value):
-    return sorted(value.items(), key = lambda (k, v): (k['x86_vendor'], k['x86_model'], k['x86_family'], k['cpu_identifier']))
+    #return sorted(value.items(), key = lambda (k, v): (k['x86_vendor'], k['x86_model'], k['x86_family'], k['cpu_identifier']))
+    return value.items()
 
 @register.filter
 def cpufreqformat(value):
