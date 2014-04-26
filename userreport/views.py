@@ -37,7 +37,7 @@ def upload(request):
         data_type = POST['type']
         data_version = int(POST['version'])
         data = POST['data']
-    except KeyError, e:
+    except KeyError as e:
         return HttpResponseBadRequest('Missing required fields.\n', content_type = 'text/plain')
 
     uploader = request.META['REMOTE_ADDR']
@@ -173,7 +173,7 @@ def report_opengl_json(request):
         device = (report.vendor, report.renderer, report.os, report.driver)
         devices.setdefault((hashabledict(limits), exts), set()).add(device)
 
-    sorted_devices = sorted(devices.items(), key = lambda (k,deviceset): sorted(deviceset))
+    sorted_devices = sorted(devices.items(), key=devices.items().get)
 
     data = []
     for (limits,exts),deviceset in sorted_devices:
