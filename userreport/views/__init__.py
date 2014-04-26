@@ -1,6 +1,8 @@
-from userreport.models import UserReport, UserReport_hwdetect, GraphicsDevice, GraphicsExtension, GraphicsLimit
-import userreport.x86 as x86
-import userreport.gl
+from userreport.views.upload import Upload
+
+from userreport.models import UserReport #, UserReport_hwdetect, GraphicsDevice, GraphicsExtension, GraphicsLimit
+#import userreport.x86 as x86
+#import userreport.gl
 
 import hashlib
 import datetime
@@ -14,59 +16,16 @@ from django.utils import simplejson
 from django.db import connection, transaction
 
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods
 
 class hashabledict(dict):
     def __hash__(self):
         return hash(tuple(sorted(self.items())))
 
-@csrf_exempt
-@require_POST
-def upload(request):
-
-    try:
-        decompressed = zlib.decompress(request.raw_post_data)
-    except zlib.error:
-        return HttpResponseBadRequest('Invalid POST data.\n', content_type = 'text/plain')
-
-    POST = QueryDict(decompressed)
-
-    try:
-        user_id = POST['user_id']
-        generation_date = datetime.datetime.utcfromtimestamp(int(POST['time']))
-        data_type = POST['type']
-        data_version = int(POST['version'])
-        data = POST['data']
-    except KeyError as e:
-        return HttpResponseBadRequest('Missing required fields.\n', content_type = 'text/plain')
-
-    uploader = request.META['REMOTE_ADDR']
-    # Fix the IP address if running via proxy on localhost
-    if uploader == '127.0.0.1':
-        try:
-            uploader = request.META['HTTP_X_FORWARDED_FOR'].split(',')[0].strip()
-        except KeyError:
-            pass
-
-    user_id_hash = hashlib.sha1(user_id).hexdigest()
-
-    report = UserReport(
-        uploader = uploader,
-        user_id_hash = user_id_hash,
-        generation_date = generation_date,
-        data_type = data_type,
-        data_version = data_version,
-        data = data
-    )
-    report.save()
-
-    return HttpResponse('OK', content_type = 'text/plain')
-
-
 def index(request):
     return render_to_response('index.html')
 
-
+"""
 def report_cpu(request):
     reports = UserReport_hwdetect.objects
     reports = reports.filter(data_type = 'hwdetect', data_version__gte = 4, data_version__lte = 5)
@@ -412,3 +371,4 @@ def report_usercount(request):
     response = HttpResponse(content_type = 'image/png')
     canvas.print_png(response, dpi=80)
     return response
+"""
