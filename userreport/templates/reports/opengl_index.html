@@ -70,11 +70,11 @@ function sort_by_name(ul)
 </script>
 
 <p>Based on data submitted by players of <a href="http://play0ad.com/">0 A.D.</a>
-See the <a href="{% url userreport.views.index %}">index page</a> for more stuff.
+See the <a href="{% url 'userreport.views.index' %}">index page</a> for more stuff.
 Contact <a href="mailto:excors&#X0040;gmail.com">Philip Taylor</a> for questions.</p>
 
-<p>Browse the data here, or download as <a href="{% url userreport.views.report_opengl_json %}">JSON</a>
-(see <a href="{% url userreport.views.report_opengl_json_format %}">format description</a>).
+<p>Browse the data here, or download as <a href="{# url userreport.views.report_opengl_json %}">JSON</a>
+(see <a href="{# url userreport.views.report_opengl_json_format %}">format description</a>).
 Feel free to do whatever you want with the data.</p>
 
 <p>The listed extensions are based on the GL_EXTENSIONS string:
@@ -102,7 +102,7 @@ Sort by
 <li data-supportedby={{ ext_devices|dictget:ext }} data-extname="{{ ext }}">
 <span class=progress title="Percentage of users with this extension"><span class=bar style="width:{% widthratio ext_devices|dictget:ext num_users 40 %}px">{% widthratio ext_devices|dictget:ext num_users 100 %}%</span></span>
 (<a href="{{ ext|glext_spec_link }}" title="Link to specification">s</a>)
-<a href="{% url userreport.views.report_opengl_feature ext %}">{{ ext }}</a>
+<a href="{# url userreport.views.report_opengl_feature ext %}">{{ ext }}</a>
 {% if ext in ext_versions %}(~GL{{ ext_versions|dictget:ext }}){% endif %}
 {% endfor %}
 </ul>
@@ -112,7 +112,7 @@ Sort by
 <h2>Implementation limits</h2>
 <ul>
 {% for limit in all_limits %}
-<li><a href="{% url userreport.views.report_opengl_feature limit %}">{{ limit|prettify_gl_title }}</a>
+<li><a href="{# url userreport.views.report_opengl_feature limit %}">{{ limit|prettify_gl_title }}</a>
 {% endfor %}
 </ul>
 </div>
@@ -121,7 +121,7 @@ Sort by
 <h2>Device details</h2>
 <ul>
 {% for device,users in all_devices|sorteditems %}
-<li><a href="{% url userreport.views.report_opengl_device device %}">{{ device }}</a> {% if 0 %}({{ users }} users){% endif %}
+<li><a href="{# url userreport.views.report_opengl_device device %}">{{ device }}</a> {% if 0 %}({{ users }} users){% endif %}
 {% endfor %}
 </ul>
 </div>

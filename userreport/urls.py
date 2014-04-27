@@ -14,7 +14,7 @@ urlpatterns = patterns(
     url(r'^upload/v1/$', 'userreport.views.Upload',
         name='upload-v1'),
 
-    #url(r'^opengl/$', 'userreport.views.report_opengl_index'),
+    url(r'^opengl/$', 'userreport.views.ReportOpenglIndex'),
     #url(r'^opengl/json$', 'userreport.views.report_opengl_json',
     #    name='report-opengl-json'),
     #url(r'^opengl/json/format$', 'userreport.views.report_opengl_json_format',
@@ -26,8 +26,8 @@ urlpatterns = patterns(
     #url(r'^opengl/device', 'userreport.views.report_opengl_device_compare',
     #    name='report-opengl-device-compare'),
 	
-    #url(r'^cpu/$', 'userreport.views.report_cpu',
-    #    name='report-cpu'),
+    url(r'^cpu/$', 'userreport.views.report_cpu',
+        name='report-cpu'),
 	
     #url(r'^usercount/$', 'userreport.views.report_usercount',
     #    name='report-usercount'),
