@@ -172,36 +172,35 @@ class UserReport_hwdetect(UserReport):
             if m: return m.group(1)
 
         if json['GL_VENDOR'] == 'Intel':
-            # Assume 64-bit takes precedence
-            m = re.search(r'ig4icd64.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
-            m = re.search(r'ig4icd32.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
-            # Legacy 32-bit
-            m = re.search(r'iglicd32.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
-            m = re.search(r'ialmgicd32.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
-            m = re.search(r'ialmgicd.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
+            possibilities = [# Assume 64-bit takes precedence
+                             r'ig4icd64.dll \((.*?)\)',
+                             r'ig4icd32.dll \((.*?)\)',
+                             # Legacy 32-bit
+                             r'iglicd32.dll \((.*?)\)',
+                             r'ialmgicd32.dll \((.*?)\)',
+                             r'ialmgicd.dll \((.*?)\)' ]
+            for i in possibilities:
+                m = re.search(i, gfx_drv_ver)
+                if m:
+                    return m.group(1)
 
         return gfx_drv_ver
 
 
 class GraphicsDevice(models.Model):
     device_name = models.CharField(max_length = 128, db_index = True)
-    vendor = models.CharField(max_length = 64)
-    renderer = models.CharField(max_length = 128)
-    os = models.CharField(max_length = 16)
-    driver = models.CharField(max_length = 128)
-    usercount = models.IntegerField()
+    vendor      = models.CharField(max_length = 64)
+    renderer    = models.CharField(max_length = 128)
+    os          = models.CharField(max_length = 16)
+    driver      = models.CharField(max_length = 128)
+    usercount   = models.IntegerField()
 
 class GraphicsExtension(models.Model):
-    device = models.ForeignKey(GraphicsDevice)
-    name = models.CharField(max_length = 128, db_index = True)
+    device      = models.ForeignKey(GraphicsDevice)
+    name        = models.CharField(max_length = 128, db_index = True)
 
 class GraphicsLimit(models.Model):
-    device = models.ForeignKey(GraphicsDevice)
-    name = models.CharField(max_length = 128, db_index = True)
-    value = models.CharField(max_length = 64)
+    device      = models.ForeignKey(GraphicsDevice)
+    name        = models.CharField(max_length = 128, db_index = True)
+    value       = models.CharField(max_length = 64)
 
