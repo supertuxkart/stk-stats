@@ -42,7 +42,7 @@ def _get_devices():
 
         count += 1
         if count % 100 == 0:
-            LOG.info("{0} / {1}..." .format(count, len(reports)))
+            LOG.info("%d / %d..." % (count, len(reports)))
     LOG.info('Collected %d devices' % len(reports))
     return devices
 
@@ -73,5 +73,5 @@ def _save_devices(devices):
 
         count += 1
         if count % 100 == 0:
-            LOG.info("%d / %d..." % (count, len(reports)))
+            LOG.info("%d / %d..." % (count, len(devices)))
     LOG.info('Finished')
