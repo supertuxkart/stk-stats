@@ -117,3 +117,56 @@ def ReportOpenglFeature(request, feature):
         'usercounts': usercounts,
         'num_users': num_users,
     })
+
+
+def ReportOpenglDevices(request, selected):
+    cursor = connection.cursor()
+    cursor.execute('''
+        SELECT DISTINCT device_name
+        FROM userreport_graphicsdevice
+    ''')
+    all_devices = set(n for (n,) in cursor.fetchall())
+
+    all_limits = set()
+    all_exts = set()
+    devices = {}
+    gl_renderers = set()
+
+    reports = GraphicsDevice.objects.filter(device_name__in = selected)
+    for report in reports:
+        exts = frozenset(e.name for e in report.graphicsextension_set.all())
+        all_exts |= exts
+
+        limits = dict((l.name, l.value) for l in report.graphicslimit_set.all())
+        all_limits |= set(limits.keys())
+
+        devices.setdefault(hashabledict({'device': report.device_name, 'os': report.os}), {}).setdefault((hashabledict(limits), exts), set()).add(report.driver)
+
+        gl_renderers.add(report.renderer)
+
+    if len(selected) == 1 and len(devices) == 0:
+        raise Http404
+
+    all_limits = sorted(all_limits)
+    all_exts = sorted(all_exts)
+
+    distinct_devices = []
+    for (renderer, v) in devices.items():
+        for (caps, versions) in v.items():
+            distinct_devices.append((renderer, sorted(versions), caps))
+    distinct_devices.sort(key = lambda x: (x[0]['device'], x))
+
+    return render_to_response('reports/opengl_device.html', {
+        'selected': selected,
+        'all_limits': all_limits,
+        'all_exts': all_exts,
+        'all_devices': all_devices,
+        'devices': distinct_devices,
+        'gl_renderers': gl_renderers,
+    })
+
+def ReportOpenglDevice(request, device):
+    return ReportOpenglDevices(request, [device])
+
+def ReportOpenglDeviceCompare(request):
+    return ReportOpenglDevices(request, request.GET.getlist('d'))

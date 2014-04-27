@@ -73,8 +73,8 @@ function sort_by_name(ul)
 See the <a href="{% url 'userreport.views.index' %}">index page</a> for more stuff.
 Contact <a href="mailto:excors&#X0040;gmail.com">Philip Taylor</a> for questions.</p>
 
-<p>Browse the data here, or download as <a href="{# url userreport.views.report_opengl_json %}">JSON</a>
-(see <a href="{# url userreport.views.report_opengl_json_format %}">format description</a>).
+<p>Browse the data here, or download as <a href="{% url 'userreport.views.ReportOpenglJson' %}">JSON</a>
+(see <a href="{% url 'userreport.views.ReportOpenglJsonFormat' %}">format description</a>).
 Feel free to do whatever you want with the data.</p>
 
 <p>The listed extensions are based on the GL_EXTENSIONS string:
@@ -121,7 +121,7 @@ Sort by
 <h2>Device details</h2>
 <ul>
 {% for device,users in all_devices|sorteditems %}
-<li><a href="{# url userreport.views.report_opengl_device device %}">{{ device }}</a> {% if 0 %}({{ users }} users){% endif %}
+<li><a href="{% url 'userreport.views.ReportOpenglDevice' device %}">{{ device }}</a> {% if 0 %}({{ users }} users){% endif %}
 {% endfor %}
 </ul>
 </div>
