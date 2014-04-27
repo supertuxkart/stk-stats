@@ -25,13 +25,13 @@ def _get_devices():
     devices = {}
     count = 0
     for report in reports:
-        device = report.gl_device_identifier()
-        vendor = report.gl_vendor()
+        device   = report.gl_device_identifier()
+        vendor   = report.gl_vendor()
         renderer = report.gl_renderer()
-        os = report.os()
-        driver = report.gl_driver()
-        exts = report.gl_extensions()
-        limits = report.gl_limits()
+        os       = report.os()
+        driver   = report.gl_driver()
+        exts     = report.gl_extensions()
+        limits   = report.gl_limits()
         report.clear_cache()
 
         devices.setdefault(
