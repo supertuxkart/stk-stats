@@ -1,6 +1,5 @@
 {% extends "reports/base.html" %}
 {% load report_tags %}
-{% load cycle %}
 
 {% block css %}
 ul {
@@ -55,7 +54,7 @@ OpenGL capabilities report: {{ feature }}
 
 {% block content %}
 
-<p>(<a href="{% url userreport.views.report_opengl_index %}">Back to index page.</a>)</p>
+<p>(<a href="{% url 'userreport.views.ReportOpenglIndex' %}">Back to index page.</a>)</p>
 
 {% if is_extension %}
 
@@ -76,9 +75,9 @@ OpenGL capabilities report: {{ feature }}
       <th>Driver versions
 
 {% for device in values.true|sorteddeviceitems %}
-<tr class="data true{% safe_cycle '' ' alt'%}">
+<tr class="data true{% cycle '' ' alt'%}">
 <td>{{ device.0.vendor }}
-<td class=r><a href="{% url userreport.views.report_opengl_device device.0.device %}">{{ device.0.renderer }}</a>
+<td class=r><a href="{# url userreport.views.report_opengl_device device.0.device %}">{{ device.0.renderer }}</a>
 <td>{{ device.1.usercount }}
 <td>{{ device.0.os }}
 <td><ul>
@@ -100,9 +99,9 @@ OpenGL capabilities report: {{ feature }}
       <th>Driver versions
 
 {% for device in values.false|sorteddeviceitems %}
-<tr class="data false{% safe_cycle '' ' alt'%}">
+<tr class="data false{% cycle '' ' alt'%}">
 <td>{{ device.0.vendor }}
-<td class=r><a href="{% url userreport.views.report_opengl_device device.0.device %}">{{ device.0.renderer }}</a>
+<td class=r><a href="{# url userreport.views.report_opengl_device device.0.device %}">{{ device.0.renderer }}</a>
 <td>{{ device.1.usercount }}
 <td>{{ device.0.os }}
 <td><ul>
@@ -142,9 +141,9 @@ OpenGL capabilities report: {{ feature }}
       <th>Driver versions
 
 {% for device in values|dictget:val|sorteddeviceitems %}
-<tr class="data{% safe_cycle '' ' alt'%}">
+<tr class="data{% cycle '' ' alt'%}">
 <td>{{ device.0.vendor }}
-<td class=r><a href="{% url userreport.views.report_opengl_device device.0.device %}">{{ device.0.renderer }}</a>
+<td class=r><a href="{# url userreport.views.report_opengl_device device.0.device %}">{{ device.0.renderer }}</a>
 <td>{{ device.1.usercount }}
 <td>{{ device.0.os }}
 <td><ul>
