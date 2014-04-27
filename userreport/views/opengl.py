@@ -1,44 +1,29 @@
-from userreport.models import GraphicsDevice, GraphicsExtension
+from userreport.models import GraphicsDevice, GraphicsExtension, GraphicsLimit
 from userreport.gl import glext_versions
 
 from django.db import connection, transaction
+from django.db.models import Sum
 from django.shortcuts import render_to_response
 
+
 def ReportOpenglIndex(request):
-    cursor = connection.cursor()
+    num_users = GraphicsDevice.objects.\
+        aggregate(Sum('usercount'))['usercount__sum']
 
-    cursor.execute('''
-        SELECT SUM(usercount)
-        FROM userreport_graphicsdevice
-    ''')
-    num_users = sum(c for (c,) in cursor)
+    exts = GraphicsExtension.objects.values('name').\
+        select_related('device').\
+        annotate(count=Sum('device__usercount')).values('name', 'count')
+    all_exts = set(e['name'] for e in list(exts))
+    ext_devices = {e['name']: e['count'] for e in list(exts)}
 
-    cursor.execute('''
-        SELECT name, SUM(usercount)
-        FROM userreport_graphicsextension e
-        JOIN userreport_graphicsdevice d
-            ON e.device_id = d.id
-        GROUP BY name
-    ''')
-    exts = cursor.fetchall()
-    all_exts = set(n for n,c in exts)
-    ext_devices = dict((n,c) for n,c in exts)
+    limits = GraphicsLimit.objects.values('name')
+    all_limits = set(l['name'] for l in list(limits))
 
-    cursor.execute('''
-        SELECT name
-        FROM userreport_graphicslimit l
-        JOIN userreport_graphicsdevice d
-            ON l.device_id = d.id
-        GROUP BY name
-    ''')
-    all_limits = set(n for (n,) in cursor.fetchall())
-
-    cursor.execute('''
-        SELECT device_name, SUM(usercount)
-        FROM userreport_graphicsdevice
-        GROUP BY device_name
-    ''')
-    all_devices = dict((n,c) for n,c in cursor.fetchall())
+    devices = GraphicsDevice.objects.values('device_name').\
+        annotate(count=Sum('usercount'))
+    all_devices = {}
+    for device in devices:
+        all_devices[device['device_name']] = device['count']
 
     all_limits = sorted(all_limits)
     all_exts = sorted(all_exts)
