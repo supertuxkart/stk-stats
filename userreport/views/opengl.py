@@ -5,6 +5,7 @@ from userreport.util import hashabledict
 from django.db import connection, transaction
 from django.db.models import Sum
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 import re
 
@@ -38,7 +39,7 @@ def ReportOpenglIndex(request):
         'ext_devices': ext_devices,
         'num_users': num_users,
         'ext_versions': glext_versions,
-    })
+    }, context_instance=RequestContext(request))
 
 
 def ReportOpenglFeature(request, feature):
