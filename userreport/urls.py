@@ -27,7 +27,7 @@ urlpatterns = patterns(
     #url(r'^opengl/device', 'userreport.views.report_opengl_device_compare',
     #    name='report-opengl-device-compare'),
 	
-    url(r'^cpu/$', 'userreport.views.report_cpu',
+    url(r'^cpu/$', 'userreport.views.ReportCpu',
         name='report-cpu'),
 	
     #url(r'^usercount/$', 'userreport.views.report_usercount',
