@@ -7,6 +7,9 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db.models import Q
 from django.utils import simplejson
 
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+
 import re
 import numpy
 
@@ -71,11 +74,11 @@ def report_performance(request):
         json = report.data_json_nocache()
         return {
             'cpu_identifier': json['cpu_identifier'],
-            'device': report.gl_device_identifier(),
-            'build_debug': json['build_debug'],
+            'device':         report.gl_device_identifier(),
+            'build_debug':    json['build_debug'],
             'build_revision': json['build_revision'],
             'build_datetime': json['build_datetime'],
-            'gfx_res': (json['video_xres'], json['video_yres']),
+            'gfx_res':        (json['video_xres'], json['video_yres']),
         }
 
     def summarise_profile(report):
@@ -107,11 +110,11 @@ def report_performance(request):
         if shadows: options.append('S')
 
         return {
-            'msecs': msecs,
-            'map': mapname,
-            'time': json['time'],
+            'msecs':   msecs,
+            'map':     mapname,
+            'time':    json['time'],
             'options': '[%s]' % '+'.join(options),
-#            'json': json
+#            'json':   json
         }
 
     profiles = []
@@ -129,7 +132,7 @@ def report_performance(request):
                     profiles.append([report.user_id_hash, hwdetect, prof])
 
     datapoints = {}
-    for user,hwdetect,profile in profiles:
+    for user, hwdetect, profile in profiles:
         if profile['map'] != 'Death Canyon':
             continue
         if profile['time'] != 5:
@@ -154,9 +157,6 @@ def report_performance(request):
         for x in data_boxplot[i]:
             data_scatter[0].append(i+1)
             data_scatter[1].append(x)
-
-    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-    from matplotlib.figure import Figure
 
     fig = Figure(figsize=(16, 0.25*len(datapoints.items())))
 
@@ -249,16 +249,16 @@ def report_hwdetect_test_data(request):
     for report in reports:
         json = report.data_json_nocache()
         relevant = {
-            'os_unix': json['os_unix'],
-            'os_linux': json['os_linux'],
-            'os_macosx': json['os_macosx'],
-            'os_win': json['os_win'],
-            'gfx_card': json['gfx_card'],
-            'gfx_drv_ver': json['gfx_drv_ver'],
-            'gfx_mem': json['gfx_mem'],
-            'GL_VENDOR': json['GL_VENDOR'],
-            'GL_RENDERER': json['GL_RENDERER'],
-            'GL_VERSION': json['GL_VERSION'],
+            'os_unix':       json['os_unix'],
+            'os_linux':      json['os_linux'],
+            'os_macosx':     json['os_macosx'],
+            'os_win':        json['os_win'],
+            'gfx_card':      json['gfx_card'],
+            'gfx_drv_ver':   json['gfx_drv_ver'],
+            'gfx_mem':       json['gfx_mem'],
+            'GL_VENDOR':     json['GL_VENDOR'],
+            'GL_RENDERER':   json['GL_RENDERER'],
+            'GL_VERSION':    json['GL_VERSION'],
             'GL_EXTENSIONS': json['GL_EXTENSIONS'],
         }
         data.add(hashabledict(relevant))

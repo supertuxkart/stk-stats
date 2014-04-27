@@ -1,3 +1,6 @@
+# This file is mainly for detecting the graphics used and storing these
+# informations in string that are later used for the report
+
 from django.db import models
 from django.utils import simplejson
 
@@ -20,9 +23,7 @@ class UserReport(models.Model):
     generation_date = models.DateTimeField(editable = False)
 
     data_type = models.CharField(max_length = 16, db_index = True, editable = False)
-
     data_version = models.IntegerField(editable = False)
-
     data = models.TextField(editable = False)
 
     def data_json(self):
@@ -54,16 +55,15 @@ class UserReport_hwdetect(UserReport):
         proxy = True
 
     def os(self):
-        os = 'Unknown'
         json = self.data_json()
         if json:
             if json['os_win']:
-                os = 'Windows'
+                return 'Windows'
             elif json['os_linux']:
-                os = 'Linux'
+                return 'Linux'
             elif json['os_macosx']:
-                os = 'OS X'
-        return os
+                return 'OS X'
+        return 'Unknown'
 
     def gl_renderer(self):
         json = self.data_json()
@@ -108,8 +108,10 @@ class UserReport_hwdetect(UserReport):
             limits[k] = v
         return limits
 
-    # Construct a nice-looking concise graphics device identifier
-    # (skipping boring hardware/driver details)
+    """
+    Construct a nice-looking concise graphics device identifier
+    (skipping boring hardware/driver details)
+    """
     def gl_device_identifier(self):
         r = self.gl_renderer()
         m = re.match(r'^(?:AMD |ATI |NVIDIA |Mesa DRI )?(.*?)\s*(?:GEM 20100328 2010Q1|GEM 20100330 DEVELOPMENT|GEM 20091221 2009Q4|20090101|Series)?\s*(?:x86|/AGP|/PCI|/MMX|/MMX\+|/SSE|/SSE2|/3DNOW!|/3DNow!|/3DNow!\+)*(?: TCL| NO-TCL)?(?: DRI2)?(?: \(Microsoft Corporation - WDDM\))?(?: OpenGL Engine)?\s*$', r)
@@ -121,7 +123,9 @@ class UserReport_hwdetect(UserReport):
         json = self.data_json()
         return json['GL_VENDOR'].strip()
 
-    # Construct a nice string identifying the driver
+    """ Construct a nice string identifying the driver
+    It tries all the known possibilities for drivers to find the used one
+    """
     def gl_driver(self):
         json = self.data_json()
         gfx_drv_ver = json['gfx_drv_ver']
@@ -151,25 +155,21 @@ class UserReport_hwdetect(UserReport):
         if m:
             return '%s (indirect)' % m.group(1)
 
+
+        possibilities = [] # Otherwise the iteration at the will will
         # Try to guess the relevant Windows driver
         # (These are the ones listed in lib/sysdep/os/win/wgfx.cpp)
 
         if json['GL_VENDOR'] == 'NVIDIA Corporation':
-            # Assume 64-bit takes precedence
-            m = re.search(r'nvoglv64.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
-            m = re.search(r'nvoglv32.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
-            m = re.search(r'nvoglnt.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
+            possibilities = [# Assume 64-bit takes precedence
+                             r'nvoglv64.dll \((.*?)\)',
+                             r'nvoglv32.dll \((.*?)\)',
+                             r'nvoglnt.dll \((.*?)\)']
 
         if json['GL_VENDOR'] in ('ATI Technologies Inc.', 'Advanced Micro Devices, Inc.'):
-            m = re.search(r'atioglxx.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
-            m = re.search(r'atioglx2.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
-            m = re.search(r'atioglaa.dll \((.*?)\)', gfx_drv_ver)
-            if m: return m.group(1)
+            possibilities = [r'atioglxx.dll \((.*?)\)',
+                             r'atioglx2.dll \((.*?)\)',
+                             r'atioglaa.dll \((.*?)\)']
 
         if json['GL_VENDOR'] == 'Intel':
             possibilities = [# Assume 64-bit takes precedence
@@ -179,10 +179,11 @@ class UserReport_hwdetect(UserReport):
                              r'iglicd32.dll \((.*?)\)',
                              r'ialmgicd32.dll \((.*?)\)',
                              r'ialmgicd.dll \((.*?)\)' ]
-            for i in possibilities:
-                m = re.search(i, gfx_drv_ver)
-                if m:
-                    return m.group(1)
+
+        for i in possibilities:
+            m = re.search(i, gfx_drv_ver)
+            if m:
+                return m.group(1)
 
         return gfx_drv_ver
 
