@@ -1,12 +1,8 @@
 from userreport.models import UserReport_hwdetect
 import userreport.x86 as x86
+from userreport.util import hashabledict
 
 from django.shortcuts import render_to_response
-
-
-class hashabledict(dict):
-    def __hash__(self):
-        return hash(tuple(sorted(self.items())))
 
 
 def ReportCpu(request):

@@ -1,16 +1,12 @@
 from userreport.models import GraphicsDevice, GraphicsExtension, GraphicsLimit
-from userreport.gl import glext_versions
+from userreport.util.gl import glext_versions
+from userreport.util import hashabledict
 
 from django.db import connection, transaction
 from django.db.models import Sum
 from django.shortcuts import render_to_response
 
 import re
-
-
-class hashabledict(dict):
-    def __hash__(self):
-        return hash(tuple(sorted(self.items())))
 
 
 def ReportOpenglIndex(request):

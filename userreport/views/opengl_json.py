@@ -1,13 +1,9 @@
 from userreport.models import GraphicsDevice
+from userreport.util import hashabledict
 
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.utils import simplejson
-
-
-class hashabledict(dict):
-    def __hash__(self):
-        return hash(tuple(sorted(self.items())))
 
 
 def ReportOpenglJson(request):

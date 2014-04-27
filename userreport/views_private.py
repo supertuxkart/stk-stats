@@ -1,4 +1,5 @@
 from userreport.models import UserReport, UserReport_hwdetect
+from userreport.util import hashabledict
 
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render_to_response
@@ -13,9 +14,6 @@ from matplotlib.figure import Figure
 import re
 import numpy
 
-class hashabledict(dict):
-    def __hash__(self):
-        return hash(tuple(sorted(self.items())))
 
 def render_reports(request, reports, template, args):
     paginator = Paginator(reports, args.get('pagesize', 100))

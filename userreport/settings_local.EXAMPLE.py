@@ -1,5 +1,8 @@
 # Fill in this file and save as settings_local.py
 
+PROJECT_NAME = 'SuperTuxKart'
+PROJECT_URL = 'http://supertuxkart.net/'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
