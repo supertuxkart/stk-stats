@@ -8,7 +8,7 @@ from django.template import RequestContext
 
 def ReportCpu(request):
     reports = UserReport_hwdetect.objects
-    reports = reports.filter(data_type = 'hwdetect', data_version__gte = 4)
+    reports = reports.filter(data_type='hwdetect', data_version__gte=4)
 
     all_users = set()
     cpus = {}
@@ -51,7 +51,7 @@ def ReportCpu(request):
             return "L%d %s: %s (%s, shared %dx%s)" % (
                 c['level'], types[c['type']], fmt_size(c['totalsize']),
                 fmt_assoc(c['associativity']), c['sharedby'],
-                    ('' if c['linesize'] == 64 else ', %dB line' % c['linesize'])
+                ('' if c['linesize'] == 64 else ', %dB line' % c['linesize'])
             )
 
         def fmt_tlb(c, t):
@@ -68,7 +68,8 @@ def ReportCpu(request):
             icaches = i[:]
             caches = []
             while len(dcaches) or len(icaches):
-                if len(dcaches) and len(icaches) and dcaches[0] == icaches[0] and dcaches[0]['type'] == 3:
+                if len(dcaches) and len(icaches) and \
+                   dcaches[0] == icaches[0] and dcaches[0]['type'] == 3:
                     caches.append(cb(dcaches[0], 'U'))
                     dcaches.pop(0)
                     icaches.pop(0)
@@ -82,13 +83,15 @@ def ReportCpu(request):
             return tuple(caches)
 
         try:
-            cpu['caches'] = fmt_caches(json['x86_dcaches'], json['x86_icaches'], fmt_cache)
-            cpu['tlbs'] = fmt_caches(json['x86_tlbs'], json['x86_tlbs'], fmt_tlb)
+            cpu['caches'] = fmt_caches(json['x86_dcaches'],
+                                       json['x86_icaches'], fmt_cache)
+            cpu['tlbs'] = fmt_caches(json['x86_tlbs'],
+                                     json['x86_tlbs'], fmt_tlb)
         except TypeError:
-            continue # skip on bogus cache data
+            continue  # skip on bogus cache data
 
         caps = set()
-        for (n,_,b) in x86.cap_bits:
+        for (n, _, b) in x86.cap_bits:
             if n.endswith('[2]'):
                 continue
             if json['x86_caps[%d]' % (b / 32)] & (1 << (b % 32)):
@@ -98,6 +101,4 @@ def ReportCpu(request):
         all_users.add(report.user_id_hash)
         cpus.setdefault(hashabledict(cpu), set()).add(report.user_id_hash)
 
-    return render_to_response('reports/cpu.html',
-                              {'cpus': cpus, 'x86_cap_descs': x86.cap_descs},
-                              context_instance=RequestContext(request))
+    return render_to_response('reports/cpu.html', {'cpus': cpus, 'x86_cap_descs': x86.cap_descs}, context_instance=RequestContext(request))

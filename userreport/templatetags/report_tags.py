@@ -92,7 +92,7 @@ def format_profile(table):
 
     out = []
     for c in cols:
-        out.append(u'<th>%s' % conditional_escape(c))
+        out.append('<th>%s' % conditional_escape(c))
 
     def handle(indents, indent, t):
         items = sorted(t.items())
@@ -105,14 +105,14 @@ def format_profile(table):
                 last = False
             item_id += 1
 
-            out.append(u'<tr>')
-            out.append(u'<td><span class=treemarker>%s%s─%s╴</span>%s' % (indent, (u'└' if last else u'├'), (u'┬' if row[0] is not None else u'─'), conditional_escape(name)))
+            out.append('<tr>')
+            out.append('<td><span class=treemarker>%s%s─%s╴</span>%s' % (indent, ('└' if last else '├'), ('┬' if row[0] is not None else '─'), conditional_escape(name)))
             outrow = []
             for c in range(1, len(cols)):
-                outrow.append(u'<td>%s%s' % ('  ' * indents, conditional_escape(row[c])))
+                outrow.append('<td>%s%s' % ('  ' * indents, conditional_escape(row[c])))
             out.append('%s</td>' % ''.join(outrow))
             if row[0] is not None:
-                handle(indents+1, indent+(u'  ' if last else u'│ '), row[0])
-    handle(0, u'', table['data'])
+                handle(indents+1, indent+('  ' if last else '│ '), row[0])
+    handle(0, '', table['data'])
 
-    return mark_safe(u'\n'.join(out))
+    return mark_safe('\n'.join(out))
