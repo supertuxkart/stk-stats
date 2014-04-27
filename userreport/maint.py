@@ -73,5 +73,5 @@ def _save_devices(devices):
 
         count += 1
         if count % 100 == 0:
-            LOG.info("%d / %d..." % (count, len(devices)))
+            LOG.info("%d / %d..." % (count, len(reports)))
     LOG.info('Finished')
