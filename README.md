@@ -13,6 +13,16 @@ manager:
  * postgresql 9.0+
  * python 3.3+
  * python-virtualenv
+ * python-distutils-extra
+ * gcc
+ * gfortran
+ * libatlas-base-dev
+ * libatlas3gf-base
+ * libfreetype6-dev
+
+Several of the above packages are dependencies for `python-matplotlib`. This module
+is difficult to install via `pip`, so you may want to create a virtualenv with
+site-packages available to it.
 
 From the repository root, run:
 ```
