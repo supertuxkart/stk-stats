@@ -1,6 +1,6 @@
 from userreport.views.upload import Upload
 from userreport.views.cpu import ReportCpu
-# from userreport.views.usercount import ReportUsercount
+from userreport.views.usercount import ReportUsercount
 from userreport.views.opengl import ReportOpenglIndex, ReportOpenglFeature,\
     ReportOpenglDevice, ReportOpenglDevices, ReportOpenglDeviceCompare
 from userreport.views.opengl_json import ReportOpenglJson,\

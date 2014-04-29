@@ -31,8 +31,8 @@ urlpatterns = patterns(
     url(r'^cpu/$', 'userreport.views.ReportCpu',
         name='report-cpu'),
 	
-    #url(r'^usercount/$', 'userreport.views.report_usercount',
-    #    name='report-usercount'),
+    url(r'^usercount/$', 'userreport.views.ReportUsercount',
+        name='report-usercount'),
 
     url(r'^admin/', include(admin.site.urls)),
 )

@@ -1,14 +1,15 @@
+from userreport.models import UserReport
+
+from django.http import HttpResponse
+
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.dates import DateFormatter
 import matplotlib.artist
 
 def ReportUsercount(request):
-    reports = UserReport.objects.raw('''
-        SELECT id, upload_date, user_id_hash
-        FROM userreport_userreport
-        ORDER BY upload_date
-    ''')
+    reports = UserReport.objects.\
+            order_by('upload_date')
 
     users_by_date = {}
 
