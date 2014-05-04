@@ -1,12 +1,15 @@
 from userreport.models import UserReport
 
 from django.http import HttpResponse
+from django.views.decorators.cache import cache_page
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.dates import DateFormatter
 import matplotlib.artist
 
+
+@cache_page(60 * 120)
 def ReportUsercount(request):
     reports = UserReport.objects.\
             order_by('upload_date')
@@ -45,6 +48,6 @@ def ReportUsercount(request):
     ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
 
     canvas = FigureCanvas(fig)
-    response = HttpResponse(content_type = 'image/png')
+    response = HttpResponse(content_type='image/png')
     canvas.print_png(response, dpi=80)
     return response

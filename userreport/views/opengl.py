@@ -6,10 +6,12 @@ from django.db import connection, transaction
 from django.db.models import Sum
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.views.decorators.cache import cache_page
 
 import re
 
 
+@cache_page(60 * 120)
 def ReportOpenglIndex(request):
     num_users = GraphicsDevice.objects.\
         aggregate(Sum('usercount'))['usercount__sum']
@@ -42,6 +44,7 @@ def ReportOpenglIndex(request):
     }, context_instance=RequestContext(request))
 
 
+@cache_page(60 * 120)
 def ReportOpenglFeature(request, feature):
     all_values = set()
     usercounts = {}
@@ -116,6 +119,7 @@ def ReportOpenglFeature(request, feature):
     })
 
 
+@cache_page(60 * 120)
 def ReportOpenglDevices(request, selected):
     cursor = connection.cursor()
     cursor.execute('''

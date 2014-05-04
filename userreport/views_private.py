@@ -178,48 +178,6 @@ def report_performance(request):
     canvas.print_png(response, dpi=80)
     return response
 
-def report_ram(request):
-    reports = UserReport.objects
-    reports = reports.filter(data_type = 'hwdetect', data_version__gte = 1)
-
-    counts = {}
-    for report in reports:
-        #if not report.data_json()['os_linux']: continue
-        ram = report.data_json()['ram_total']
-        counts.setdefault(ram, set()).add(report.user_id_hash)
-
-    datapoints = []
-    accum = 0
-    for size,count in sorted(counts.items()):
-        accum += len(count)
-        datapoints.append((size, accum))
-
-    print "\n".join(repr(r) for r in datapoints)
-
-    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-    from matplotlib.figure import Figure
-
-    fig = Figure(figsize=(16, 10))
-
-    ax = fig.add_subplot(111)
-    fig.subplots_adjust(left = 0.05, right = 0.98, top = 0.98, bottom = 0.05)
-
-    ax.grid(True)
-
-    ax.plot([ d[0] for d in datapoints ], [ 100*(1-float(d[1])/accum) for d in datapoints ])
-
-    ax.set_xticks([0, 256, 512] + [1024*n for n in range(1, 9)])
-    ax.set_xlim(0, 8192)
-    ax.set_xlabel('RAM (megabytes)')
-
-    ax.set_yticks(range(0, 101, 5))
-    ax.set_ylim(0, 100)
-    ax.set_ylabel('Cumulative percentage of users')
-
-    canvas = FigureCanvas(fig)
-    response = HttpResponse(content_type = 'image/png')
-    canvas.print_png(response, dpi=80)
-    return response
 
 def report_os(request):
     reports = UserReport_hwdetect.objects
