@@ -77,6 +77,20 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'userreport', 'templates'),
 )
 
+if not DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': '127.0.0.1:11211'
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache'
+        }
+    }
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,

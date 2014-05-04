@@ -12,5 +12,6 @@ pep8==1.5.6
 psycopg2==2.5.2
 pyparsing==2.0.2
 python-dateutil==2.2
+python3-memcached==1.51
 six==1.6.1
 tornado==3.2

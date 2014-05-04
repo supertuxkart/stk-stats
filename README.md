@@ -14,6 +14,7 @@ manager:
  * python 3.3+
  * python-virtualenv
  * python-distutils-extra
+ * memcached
  * gcc
  * gfortran
  * libatlas-base-dev
