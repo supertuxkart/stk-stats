@@ -31,7 +31,9 @@ urlpatterns = patterns(
     url(r'^cpu/$', 'userreport.views.ReportCpu',
         name='report-cpu'),
 
-    (r'^ram/$', 'userreport.views.ReportRam'),
+    url(r'^ram/$', 'userreport.views.ReportRam', name='report-ram'),
+
+    url(r'^os/$', 'userreport.views.ReportOS', name='report-os'),
 	
     url(r'^usercount/$', 'userreport.views.ReportUsercount',
         name='report-usercount'),

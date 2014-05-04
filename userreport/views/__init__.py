@@ -6,6 +6,7 @@ from userreport.views.opengl import ReportOpenglIndex, ReportOpenglFeature,\
 from userreport.views.opengl_json import ReportOpenglJson,\
     ReportOpenglJsonFormat
 from userreport.views.ram import ReportRam
+from userreport.views.os import ReportOS
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext

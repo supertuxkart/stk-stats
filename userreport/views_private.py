@@ -179,24 +179,6 @@ def report_performance(request):
     return response
 
 
-def report_os(request):
-    reports = UserReport_hwdetect.objects
-    reports = reports.filter(data_type = 'hwdetect', data_version__gte = 1)
-
-    counts = {}
-    for report in reports:
-        json = report.data_json()
-        if 'linux_release' in json:
-            counts.setdefault(repr(json['linux_release']), set()).add(report.user_id_hash)
-        os = report.os()
-        counts.setdefault(os, set()).add(report.user_id_hash)
-
-    out = ''
-    for c in sorted(counts.items(), key = lambda c: len(c[1])):
-        out += '%d %s\n' % (len(c[1]), c[0])
-
-    return HttpResponse(out, content_type = 'text/plain')
-
 def report_hwdetect_test_data(request):
     reports = UserReport_hwdetect.objects
     reports = reports.filter(data_type = 'hwdetect', data_version__gte = 1)
