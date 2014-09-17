@@ -16,12 +16,11 @@ def Upload(request):
 
     try:
         decompressed = zlib.decompress(request.body)
+        POST = QueryDict(decompressed)
     except zlib.error:
-        return HttpResponseBadRequest('Invalid POST data.\n',
-                                      content_type='text/plain')
-
-    POST = QueryDict(decompressed)
-
+        # If zlib can't decode it, assume it's an uncompressed POST
+        POST = request.POST
+        
     try:
         user_id = POST['user_id']
         generation_date = datetime.datetime.utcfromtimestamp(int(POST['time']))
