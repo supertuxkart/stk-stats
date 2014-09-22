@@ -15,4 +15,7 @@ venv/
 *~
 \#*\#
 
+# IDE
+.idea/
+
 settings_local.py

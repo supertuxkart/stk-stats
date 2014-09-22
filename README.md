@@ -20,6 +20,7 @@ manager:
  * libatlas-base-dev
  * libatlas3gf-base
  * libfreetype6-dev
+ * libxft-dev
 
 Several of the above packages are dependencies for `python-matplotlib`. This module
 is difficult to install via `pip`, so you may want to create a virtualenv with
@@ -27,7 +28,7 @@ site-packages available to it.
 
 From the repository root, run:
 ```
-virtualenv venv
+virtualenv -p /usr/bin/python3 venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
