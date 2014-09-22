@@ -17,17 +17,17 @@ def ReportOpenglJson(request):
         device = (report.vendor, report.renderer, report.os, report.driver)
         devices.setdefault((hashabledict(limits), exts), set()).add(device)
 
-    sorted_devices = devices.items()#sorted(devices.items(), key=devices.items().get)
+    sorted_devices = devices.items()  # sorted(devices.items(), key=devices.items().get)
 
     data = []
-    for (limits,exts),deviceset in sorted_devices:
+    for (limits, exts), deviceset in sorted_devices:
         devices = [
             {'vendor': v, 'renderer': r, 'os': o, 'driver': d}
-            for (v,r,o,d) in sorted(deviceset)
+            for (v, r, o, d) in sorted(deviceset)
         ]
         data.append({'devices': devices, 'limits': limits, 'extensions': sorted(exts)})
     json = simplejson.dumps(data, indent=1, sort_keys=True)
-    return HttpResponse(json, content_type = 'text/plain')
+    return HttpResponse(json, content_type='text/plain')
 
 
 def ReportOpenglJsonFormat(request):

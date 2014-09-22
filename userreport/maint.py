@@ -1,4 +1,4 @@
-from userreport.models import UserReport_hwdetect, GraphicsDevice,\
+from userreport.models import UserReport_hwdetect, GraphicsDevice, \
     GraphicsExtension, GraphicsLimit
 from django.db import transaction
 
@@ -6,17 +6,20 @@ import logging
 
 LOG = logging.getLogger(__name__)
 
+
 @transaction.atomic
 def refresh_data():
     _remove_old_records()
     devices = _get_devices()
     _save_devices(devices)
 
+
 def _remove_old_records():
     LOG.info('Removing old data')
     GraphicsDevice.objects.all().delete()
     GraphicsExtension.objects.all().delete()
     GraphicsLimit.objects.all().delete()
+
 
 def _get_devices():
     LOG.info('Collecting data')
@@ -25,18 +28,18 @@ def _get_devices():
     devices = {}
     count = 0
     for report in reports:
-        device   = report.gl_device_identifier()
-        vendor   = report.gl_vendor()
+        device = report.gl_device_identifier()
+        vendor = report.gl_vendor()
         renderer = report.gl_renderer()
-        os       = report.os()
-        driver   = report.gl_driver()
-        exts     = report.gl_extensions()
-        limits   = report.gl_limits()
+        os = report.os()
+        driver = report.gl_driver()
+        exts = report.gl_extensions()
+        limits = report.gl_limits()
         report.clear_cache()
 
         devices.setdefault(
             (device, vendor, renderer, os, driver, exts,
-            tuple(sorted(limits.items()))),
+             tuple(sorted(limits.items()))),
             set()
         ).add(report.user_id_hash)
 
@@ -46,14 +49,15 @@ def _get_devices():
     LOG.info('Collected %d devices' % len(reports))
     return devices
 
+
 def _save_devices(devices):
     LOG.info('Saving device records')
     count = 0
-    for (device, vendor, renderer, os, driver, exts, limits), users\
-        in devices.items():
+    for (device, vendor, renderer, os, driver, exts, limits), users \
+            in devices.items():
         # Add GraphicsDevice
         gd = GraphicsDevice(device_name=device, vendor=vendor,
-                            renderer=renderer,os=os, driver=driver,
+                            renderer=renderer, os=os, driver=driver,
                             usercount=len(users))
         gd.save()
         device_id = gd.id

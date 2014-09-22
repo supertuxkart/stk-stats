@@ -1,16 +1,12 @@
 # http://code.djangoproject.com/attachment/ticket/5908/cycle.py
 
-from django.utils.translation import ungettext, ugettext as _
 from django import template
-from django.template import defaultfilters
 from django.template import Node, Variable
-from django.conf import settings
 from itertools import cycle as itertools_cycle
 
 register = template.Library()
 
 
-   
 class SafeCycleNode(Node):
     def __init__(self, cyclevars, variable_name=None):
         self.cyclevars = cyclevars
@@ -29,8 +25,7 @@ class SafeCycleNode(Node):
         return value
 
 
-
-#@register.tag
+# @register.tag
 def safe_cycle(parser, token):
     """
     Cycles among the given strings each time this tag is encountered.
@@ -95,4 +90,6 @@ def safe_cycle(parser, token):
     else:
         node = SafeCycleNode(args[1:])
     return node
+
+
 safe_cycle = register.tag(safe_cycle)

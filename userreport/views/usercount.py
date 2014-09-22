@@ -11,27 +11,26 @@ import matplotlib.artist
 
 @cache_page(60 * 120)
 def ReportUsercount(request):
-    reports = UserReport.objects.\
-            order_by('upload_date')
+    reports = UserReport.objects.order_by('upload_date')
 
     users_by_date = {}
 
     for report in reports:
-        t = report.upload_date.date() # group by day
+        t = report.upload_date.date()  # group by day
         users_by_date.setdefault(t, set()).add(report.user_id_hash)
 
     seen_users = set()
     data_scatter = ([], [], [])
-    for date,users in sorted(users_by_date.items()):
+    for date, users in sorted(users_by_date.items()):
         data_scatter[0].append(date)
         data_scatter[1].append(len(users))
         data_scatter[2].append(len(users - seen_users))
         seen_users |= users
 
-    fig = Figure(figsize=(12,6))
+    fig = Figure(figsize=(12, 6))
 
     ax = fig.add_subplot(111)
-    fig.subplots_adjust(left = 0.08, right = 0.95, top = 0.95, bottom = 0.2)
+    fig.subplots_adjust(left=0.08, right=0.95, top=0.95, bottom=0.2)
 
     ax.plot(data_scatter[0], data_scatter[1], marker='o')
     ax.plot(data_scatter[0], data_scatter[2], marker='o')

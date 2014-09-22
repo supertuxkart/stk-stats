@@ -2,7 +2,7 @@ from userreport.models import GraphicsDevice, GraphicsExtension, GraphicsLimit
 from userreport.util.gl import glext_versions
 from userreport.util import hashabledict
 
-from django.db import connection, transaction
+from django.db import connection
 from django.db.models import Sum
 from django.shortcuts import render_to_response
 from django.template import RequestContext

@@ -6,25 +6,25 @@ from django.utils import simplejson
 
 import re
 
-class UserReport(models.Model):
 
-    uploader = models.IPAddressField(editable = False)
+class UserReport(models.Model):
+    uploader = models.IPAddressField(editable=False)
 
     # Hex SHA-1 digest of user's reported ID
     # (The hashing means that publishing the database won't let people upload
     # faked reports under someone else's user ID, and also ensures a simple
     # consistent structure)
-    user_id_hash = models.CharField(max_length = 40, db_index = True, editable = False)
+    user_id_hash = models.CharField(max_length=40, db_index=True, editable=False)
 
     # When the server received the upload
-    upload_date = models.DateTimeField(auto_now_add = True, db_index = True, editable = False)
+    upload_date = models.DateTimeField(auto_now_add=True, db_index=True, editable=False)
 
     # When the user claims to have generated the report
-    generation_date = models.DateTimeField(editable = False)
+    generation_date = models.DateTimeField(editable=False)
 
-    data_type = models.CharField(max_length = 16, db_index = True, editable = False)
-    data_version = models.IntegerField(editable = False)
-    data = models.TextField(editable = False)
+    data_type = models.CharField(max_length=16, db_index=True, editable=False)
+    data_version = models.IntegerField(editable=False)
+    data = models.TextField(editable=False)
 
     def data_json(self):
         if not hasattr(self, 'cached_json'):
@@ -45,12 +45,12 @@ class UserReport(models.Model):
 
     def downcast(self):
         if self.data_type == 'hwdetect':
-            return UserReport_hwdetect.objects.get(id = self.id)
+            return UserReport_hwdetect.objects.get(id=self.id)
         else:
             return self
 
-class UserReport_hwdetect(UserReport):
 
+class UserReport_hwdetect(UserReport):
     class Meta:
         proxy = True
 
@@ -80,7 +80,7 @@ class UserReport_hwdetect(UserReport):
         if json is None or 'GL_EXTENSIONS' not in json:
             return None
         vals = re.split(r'\s+', json['GL_EXTENSIONS'])
-        return frozenset(v for v in vals if len(v)) # skip empty strings (e.g. no extensions at all, or leading/trailing space)
+        return frozenset(v for v in vals if len(v))  # skip empty strings (e.g. no extensions at all, or leading/trailing space)
 
     def gl_limits(self):
         json = self.data_json()
@@ -112,9 +112,12 @@ class UserReport_hwdetect(UserReport):
     Construct a nice-looking concise graphics device identifier
     (skipping boring hardware/driver details)
     """
+
     def gl_device_identifier(self):
         r = self.gl_renderer()
-        m = re.match(r'^(?:AMD |ATI |NVIDIA |Mesa DRI )?(.*?)\s*(?:GEM 20100328 2010Q1|GEM 20100330 DEVELOPMENT|GEM 20091221 2009Q4|20090101|Series)?\s*(?:x86|/AGP|/PCI|/MMX|/MMX\+|/SSE|/SSE2|/3DNOW!|/3DNow!|/3DNow!\+)*(?: TCL| NO-TCL)?(?: DRI2)?(?: \(Microsoft Corporation - WDDM\))?(?: OpenGL Engine)?\s*$', r)
+        m = re.match(
+            r'^(?:AMD |ATI |NVIDIA |Mesa DRI )?(.*?)\s*(?:GEM 20100328 2010Q1|GEM 20100330 DEVELOPMENT|GEM 20091221 2009Q4|20090101|Series)?\s*(?:x86|/AGP|/PCI|/MMX|/MMX\+|/SSE|/SSE2|/3DNOW!|/3DNow!|/3DNow!\+)*(?: TCL| NO-TCL)?(?: DRI2)?(?: \(Microsoft Corporation - WDDM\))?(?: OpenGL Engine)?\s*$',
+            r)
         if m:
             r = m.group(1)
         return r.strip()
@@ -126,6 +129,7 @@ class UserReport_hwdetect(UserReport):
     """ Construct a nice string identifying the driver
     It tries all the known possibilities for drivers to find the used one
     """
+
     def gl_driver(self):
         json = self.data_json()
         gfx_drv_ver = json['gfx_drv_ver']
@@ -155,30 +159,35 @@ class UserReport_hwdetect(UserReport):
         if m:
             return '%s (indirect)' % m.group(1)
 
-
-        possibilities = [] # Otherwise the iteration at the will will
+        possibilities = []  # Otherwise the iteration at the will will
         # Try to guess the relevant Windows driver
         # (These are the ones listed in lib/sysdep/os/win/wgfx.cpp)
 
         if json['GL_VENDOR'] == 'NVIDIA Corporation':
-            possibilities = [# Assume 64-bit takes precedence
-                             r'nvoglv64.dll \((.*?)\)',
-                             r'nvoglv32.dll \((.*?)\)',
-                             r'nvoglnt.dll \((.*?)\)']
+            possibilities = [
+                # Assume 64-bit takes precedence
+                r'nvoglv64.dll \((.*?)\)',
+                r'nvoglv32.dll \((.*?)\)',
+                r'nvoglnt.dll \((.*?)\)'
+            ]
 
         if json['GL_VENDOR'] in ('ATI Technologies Inc.', 'Advanced Micro Devices, Inc.'):
-            possibilities = [r'atioglxx.dll \((.*?)\)',
-                             r'atioglx2.dll \((.*?)\)',
-                             r'atioglaa.dll \((.*?)\)']
+            possibilities = [
+                r'atioglxx.dll \((.*?)\)',
+                r'atioglx2.dll \((.*?)\)',
+                r'atioglaa.dll \((.*?)\)'
+            ]
 
         if json['GL_VENDOR'] == 'Intel':
-            possibilities = [# Assume 64-bit takes precedence
-                             r'ig4icd64.dll \((.*?)\)',
-                             r'ig4icd32.dll \((.*?)\)',
-                             # Legacy 32-bit
-                             r'iglicd32.dll \((.*?)\)',
-                             r'ialmgicd32.dll \((.*?)\)',
-                             r'ialmgicd.dll \((.*?)\)' ]
+            possibilities = [
+                # Assume 64-bit takes precedence
+                r'ig4icd64.dll \((.*?)\)',
+                r'ig4icd32.dll \((.*?)\)',
+                # Legacy 32-bit
+                r'iglicd32.dll \((.*?)\)',
+                r'ialmgicd32.dll \((.*?)\)',
+                r'ialmgicd.dll \((.*?)\)'
+            ]
 
         for i in possibilities:
             m = re.search(i, gfx_drv_ver)
@@ -189,19 +198,21 @@ class UserReport_hwdetect(UserReport):
 
 
 class GraphicsDevice(models.Model):
-    device_name = models.CharField(max_length = 128, db_index = True)
-    vendor      = models.CharField(max_length = 64)
-    renderer    = models.CharField(max_length = 128)
-    os          = models.CharField(max_length = 16)
-    driver      = models.CharField(max_length = 128)
-    usercount   = models.IntegerField()
+    device_name = models.CharField(max_length=128, db_index=True)
+    vendor = models.CharField(max_length=64)
+    renderer = models.CharField(max_length=128)
+    os = models.CharField(max_length=16)
+    driver = models.CharField(max_length=128)
+    usercount = models.IntegerField()
+
 
 class GraphicsExtension(models.Model):
-    device      = models.ForeignKey(GraphicsDevice)
-    name        = models.CharField(max_length = 128, db_index = True)
+    device = models.ForeignKey(GraphicsDevice)
+    name = models.CharField(max_length=128, db_index=True)
+
 
 class GraphicsLimit(models.Model):
-    device      = models.ForeignKey(GraphicsDevice)
-    name        = models.CharField(max_length = 128, db_index = True)
-    value       = models.CharField(max_length = 64)
+    device = models.ForeignKey(GraphicsDevice)
+    name = models.CharField(max_length=128, db_index=True)
+    value = models.CharField(max_length=64)
 

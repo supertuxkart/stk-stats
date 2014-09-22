@@ -43,7 +43,7 @@ CPU capabilities
     <td>{{ cpu.os }}
     <td><nobr>{{ cpu.cpu_identifier }}</nobr>
     <td>{{ cpu.x86_vendor }}/{{ cpu.x86_model }}/{{ cpu.x86_family }}
-    <td>{% if cpu.cpu_frequency = -1 %}{% else %}{{ cpu.cpu_frequency|cpufreqformat }}{% endif %}
+    <td>{% if cpu.cpu_frequency == -1 %}{% else %}{{ cpu.cpu_frequency|cpufreqformat }}{% endif %}
     <td>{{ cpu.cpu_numpackages }}&times;{{ cpu.cpu_coresperpackage }}&times;{{ cpu.cpu_logicalpercore }}&nbsp;=&nbsp;{{ cpu.cpu_numprocs }}
     <td><nobr>{{ cpu.caches|join:"<br>" }}</nobr>
     <td><nobr>{{ cpu.tlbs|join:"<br>" }}</nobr>

@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
+
 admin.autodiscover()
 
 urlpatterns = patterns(
@@ -27,14 +28,14 @@ urlpatterns = patterns(
         name='report-opengl-device'),
     url(r'^opengl/device', 'userreport.views.ReportOpenglDeviceCompare',
         name='report-opengl-device-compare'),
-	
+
     url(r'^cpu/$', 'userreport.views.ReportCpu',
         name='report-cpu'),
 
     url(r'^ram/$', 'userreport.views.ReportRam', name='report-ram'),
 
     url(r'^os/$', 'userreport.views.ReportOS', name='report-os'),
-	
+
     url(r'^usercount/$', 'userreport.views.ReportUsercount',
         name='report-usercount'),
 

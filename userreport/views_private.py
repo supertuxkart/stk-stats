@@ -1,9 +1,8 @@
 from userreport.models import UserReport, UserReport_hwdetect
 from userreport.util import hashabledict
 
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db.models import Q
 from django.utils import simplejson
@@ -21,6 +20,7 @@ def render_reports(request, reports, template, args):
         page = int(request.GET.get('page', '1'))
     except ValueError:
         page = 1
+
     try:
         report_page = paginator.page(page)
     except (EmptyPage, InvalidPage):
@@ -32,51 +32,56 @@ def render_reports(request, reports, template, args):
 
 def report_user(request, user):
     reports = UserReport.objects.order_by('-upload_date')
-    reports = reports.filter(user_id_hash = user)
+    reports = reports.filter(user_id_hash=user)
 
     return render_reports(request, reports, 'reports/user.html', {'user': user})
 
+
 def report_messages(request):
     reports = UserReport.objects.order_by('-upload_date')
-    reports = reports.filter(data_type = 'message', data_version__gte = 1)
+    reports = reports.filter(data_type='message', data_version__gte=1)
 
     return render_reports(request, reports, 'reports/message.html', {})
 
+
 def report_profile(request):
     reports = UserReport.objects.order_by('-upload_date')
-    reports = reports.filter(data_type = 'profile', data_version__gte = 2)
+    reports = reports.filter(data_type='profile', data_version__gte=2)
 
     return render_reports(request, reports, 'reports/profile.html', {'pagesize': 20})
 
+
 def report_hwdetect(request):
     reports = UserReport.objects.order_by('-upload_date')
-    reports = reports.filter(data_type = 'hwdetect', data_version__gte = 1)
+    reports = reports.filter(data_type='hwdetect', data_version__gte=1)
 
     return render_reports(request, reports, 'reports/hwdetect.html', {})
 
+
 def report_gfx(request):
     reports = UserReport.objects.order_by('-upload_date')
-    reports = reports.filter(data_type = 'hwdetect', data_version__gte = 1)
+    reports = reports.filter(data_type='hwdetect', data_version__gte=1)
 
     return render_reports(request, reports, 'reports/gfx.html', {'pagesize': 1000})
+
 
 def report_performance(request):
     reports = UserReport.objects.order_by('upload_date')
     reports = reports.filter(
-        Q(data_type = 'hwdetect', data_version__gte = 5) |
-        Q(data_type = 'profile', data_version__gte = 2)
+        Q(data_type='hwdetect', data_version__gte=5) |
+        Q(data_type='profile', data_version__gte=2)
     )
-    #reports = reports[:500]
+    # reports = reports[:500]
 
     def summarise_hwdetect(report):
         json = report.data_json_nocache()
         return {
             'cpu_identifier': json['cpu_identifier'],
-            'device':         report.gl_device_identifier(),
-            'build_debug':    json['build_debug'],
+            'device': report.gl_device_identifier(),
+            'build_debug': json['build_debug'],
             'build_revision': json['build_revision'],
             'build_datetime': json['build_datetime'],
-            'gfx_res':        (json['video_xres'], json['video_yres']),
+            'gfx_res': (json['video_xres'], json['video_yres']),
         }
 
     def summarise_profile(report):
@@ -84,10 +89,10 @@ def report_performance(request):
         if 'map' in json:
             mapname = json['map']
         else:
-            mapname = 'unknown' # e.g. random maps
+            mapname = 'unknown'  # e.g. random maps
         msecs = None
         shadows = False
-        for name,table in json['profiler'].items():
+        for name, table in json['profiler'].items():
             m = re.match(r'Profiling Information for: root \(Time in node: (\d+\.\d+) msec/frame\)', name)
             if m:
                 try:
@@ -105,14 +110,14 @@ def report_performance(request):
             return None
 
         options = []
-        if shadows: options.append('S')
+        if shadows:
+            options.append('S')
 
         return {
-            'msecs':   msecs,
-            'map':     mapname,
-            'time':    json['time'],
+            'msecs': msecs,
+            'map': mapname,
+            'time': json['time'],
             'options': '[%s]' % '+'.join(options),
-#            'json':   json
         }
 
     profiles = []
@@ -141,65 +146,63 @@ def report_performance(request):
         title = '%s %s' % (hwdetect['device'], profile['options'])
         datapoints.setdefault(title, []).append(fps)
 
-#    return render_to_response('reports/performance.html', {'data': datapoints, 'reports': profiles})
+    #    return render_to_response('reports/performance.html', {'data': datapoints, 'reports': profiles})
 
-    sorted_datapoints = sorted(datapoints.items(), key = lambda (k,v):
-        -numpy.median(v)
-    )
+    sorted_datapoints = sorted(datapoints.items(), key=lambda kv: -numpy.median(kv[1]))
 
-    print "# %d datapoints" % sum(len(v) for k,v in sorted_datapoints)
+    print("# %d datapoints" % sum(len(v) for k, v in sorted_datapoints))
 
-    data_boxplot = [ v for k,v in sorted_datapoints ]
+    data_boxplot = [v for k, v in sorted_datapoints]
     data_scatter = ([], [])
     for i in range(len(data_boxplot)):
         for x in data_boxplot[i]:
-            data_scatter[0].append(i+1)
+            data_scatter[0].append(i + 1)
             data_scatter[1].append(x)
 
-    fig = Figure(figsize=(16, 0.25*len(datapoints.items())))
+    fig = Figure(figsize=(16, 0.25 * len(datapoints.items())))
 
     ax = fig.add_subplot(111)
-    fig.subplots_adjust(left = 0.22, right = 0.98, top = 0.98, bottom = 0.05)
+    fig.subplots_adjust(left=0.22, right=0.98, top=0.98, bottom=0.05)
 
     ax.grid(True)
 
-    ax.boxplot(data_boxplot, vert = 0, sym = '')
+    ax.boxplot(data_boxplot, vert=0, sym='')
     ax.scatter(data_scatter[1], data_scatter[0], marker='x')
 
     ax.set_xlim(0.1, 1000)
     ax.set_xscale('log')
     ax.set_xlabel('Framerate (fps)')
 
-    ax.set_yticklabels([k for k,v in sorted_datapoints], fontsize=8)
+    ax.set_yticklabels([k for k, v in sorted_datapoints], fontsize=8)
     ax.set_ylabel('Device [options: Shadows + Water reflections]')
 
     canvas = FigureCanvas(fig)
-    response = HttpResponse(content_type = 'image/png')
+    response = HttpResponse(content_type='image/png')
     canvas.print_png(response, dpi=80)
     return response
 
 
 def report_hwdetect_test_data(request):
     reports = UserReport_hwdetect.objects
-    reports = reports.filter(data_type = 'hwdetect', data_version__gte = 1)
+    reports = reports.filter(data_type='hwdetect', data_version__gte=1)
 
     data = set()
     for report in reports:
         json = report.data_json_nocache()
         relevant = {
-            'os_unix':       json['os_unix'],
-            'os_linux':      json['os_linux'],
-            'os_macosx':     json['os_macosx'],
-            'os_win':        json['os_win'],
-            'gfx_card':      json['gfx_card'],
-            'gfx_drv_ver':   json['gfx_drv_ver'],
-            'gfx_mem':       json['gfx_mem'],
-            'GL_VENDOR':     json['GL_VENDOR'],
-            'GL_RENDERER':   json['GL_RENDERER'],
-            'GL_VERSION':    json['GL_VERSION'],
+            'os_unix': json['os_unix'],
+            'os_linux': json['os_linux'],
+            'os_macosx': json['os_macosx'],
+            'os_win': json['os_win'],
+            'gfx_card': json['gfx_card'],
+            'gfx_drv_ver': json['gfx_drv_ver'],
+            'gfx_mem': json['gfx_mem'],
+            'GL_VENDOR': json['GL_VENDOR'],
+            'GL_RENDERER': json['GL_RENDERER'],
+            'GL_VERSION': json['GL_VERSION'],
             'GL_EXTENSIONS': json['GL_EXTENSIONS'],
         }
         data.add(hashabledict(relevant))
 
     json = simplejson.dumps(list(data), indent=1, sort_keys=True)
-    return HttpResponse('var hwdetectTestData = %s' % json, content_type = 'text/plain')
+    return HttpResponse('var hwdetectTestData = %s' % json, content_type='text/plain')
