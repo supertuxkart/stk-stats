@@ -10,10 +10,11 @@ Installation
 
 Before proceeding, install the following packages using your favorite package
 manager:
- * postgresql 9.0+
+ * MySQL 5.5+
  * python 3.3+
  * python-virtualenv
  * python-distutils-extra
+ * libmysqlclient-dev
  * memcached
  * gcc
  * gfortran
