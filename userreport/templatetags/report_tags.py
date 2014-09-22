@@ -2,9 +2,10 @@
 
 from django import template
 from django.template.defaultfilters import stringfilter
-from django.utils import simplejson
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
+
+import json
 
 register = template.Library()
 
@@ -28,8 +29,8 @@ wrap_at_underscores.is_safe = True
 @stringfilter
 def prettify_json(value):
     try:
-        data = simplejson.loads(value)
-        return simplejson.dumps(data, indent=2, sort_keys=True)
+        data = json.loads(value)
+        return json.dumps(data, indent=2, sort_keys=True)
     except:
         return value
 
@@ -37,7 +38,8 @@ def prettify_json(value):
 @stringfilter
 def glext_spec_link(value):
     c = value.split('_', 2)
-    if len(c) < 2: return ''
+    if len(c) < 2:
+        return ''
     return 'http://www.opengl.org/registry/specs/%s/%s.txt' % (c[1], c[2])
 
 @register.filter

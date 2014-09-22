@@ -2,8 +2,8 @@
 # informations in string that are later used for the report
 
 from django.db import models
-from django.utils import simplejson
 
+import json
 import re
 
 
@@ -27,16 +27,17 @@ class UserReport(models.Model):
     data = models.TextField(editable=False)
 
     def data_json(self):
+        """:return json"""
         if not hasattr(self, 'cached_json'):
             try:
-                self.cached_json = simplejson.loads(self.data)
+                self.cached_json = json.loads(self.data)
             except:
                 self.cached_json = None
         return self.cached_json
 
     def data_json_nocache(self):
         try:
-            return simplejson.loads(self.data)
+            return json.loads(self.data)
         except:
             return None
 
@@ -108,12 +109,11 @@ class UserReport_hwdetect(UserReport):
             limits[k] = v
         return limits
 
-    """
-    Construct a nice-looking concise graphics device identifier
-    (skipping boring hardware/driver details)
-    """
-
     def gl_device_identifier(self):
+        """
+        Construct a nice-looking concise graphics device identifier
+        (skipping boring hardware/driver details)
+        """
         r = self.gl_renderer()
         m = re.match(
             r'^(?:AMD |ATI |NVIDIA |Mesa DRI )?(.*?)\s*(?:GEM 20100328 2010Q1|GEM 20100330 DEVELOPMENT|GEM 20091221 2009Q4|20090101|Series)?\s*(?:x86|/AGP|/PCI|/MMX|/MMX\+|/SSE|/SSE2|/3DNOW!|/3DNow!|/3DNow!\+)*(?: TCL| NO-TCL)?(?: DRI2)?(?: \(Microsoft Corporation - WDDM\))?(?: OpenGL Engine)?\s*$',

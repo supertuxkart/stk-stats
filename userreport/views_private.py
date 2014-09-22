@@ -5,13 +5,13 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db.models import Q
-from django.utils import simplejson
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 import re
 import numpy
+import json
 
 
 def render_reports(request, reports, template, args):
@@ -204,5 +204,5 @@ def report_hwdetect_test_data(request):
         }
         data.add(hashabledict(relevant))
 
-    json = simplejson.dumps(list(data), indent=1, sort_keys=True)
+    json = json.dumps(list(data), indent=1, sort_keys=True)
     return HttpResponse('var hwdetectTestData = %s' % json, content_type='text/plain')

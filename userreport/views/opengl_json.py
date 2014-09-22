@@ -3,7 +3,8 @@ from userreport.util import hashabledict
 
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from django.utils import simplejson
+
+import json
 
 
 def ReportOpenglJson(request):
@@ -26,8 +27,8 @@ def ReportOpenglJson(request):
             for (v, r, o, d) in sorted(deviceset)
         ]
         data.append({'devices': devices, 'limits': limits, 'extensions': sorted(exts)})
-    json = simplejson.dumps(data, indent=1, sort_keys=True)
-    return HttpResponse(json, content_type='text/plain')
+    json_string = json.dumps(data, indent=1, sort_keys=True)
+    return HttpResponse(json_string, content_type='text/plain')
 
 
 def ReportOpenglJsonFormat(request):
