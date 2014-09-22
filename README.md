@@ -20,6 +20,7 @@ manager:
  * libatlas-base-dev
  * libatlas3gf-base
  * libfreetype6-dev
+ * libpng-dev
  * libxft-dev
 
 Several of the above packages are dependencies for `python-matplotlib`. This module
