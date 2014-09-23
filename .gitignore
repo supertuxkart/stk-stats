@@ -18,4 +18,5 @@ venv/
 # IDE
 .idea/
 
+static/
 settings_local.py

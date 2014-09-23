@@ -12,25 +12,28 @@ urlpatterns = patterns(
 
     url(r'^$', 'userreport.views.index', name='index'),
 
-    url(r'^upload/v1/$', 'userreport.views.Upload',
-        name='upload-v1'),
+    url(r'^upload/v1/$', 'userreport.views.Upload', name='upload-v1'),
 
-    url(r'^opengl/$', 'userreport.views.ReportOpenglIndex'),
+    url(r'^opengl/$', 'userreport.views.ReportOpenglIndex', name="report-opengl-index"),
+
     url(r'^opengl/json$', 'userreport.views.ReportOpenglJson',
         name='report-opengl-json'),
+
     url(r'^opengl/json/format$', 'userreport.views.ReportOpenglJsonFormat',
         name='report-opengl-json-format'),
+
     url(r'^opengl/feature/(?P<feature>[^/]+)$',
         'userreport.views.ReportOpenglFeature',
         name='report-opengl-feature'),
+
     url(r'^opengl/device/(?P<device>.+)$',
         'userreport.views.ReportOpenglDevice',
         name='report-opengl-device'),
+
     url(r'^opengl/device', 'userreport.views.ReportOpenglDeviceCompare',
         name='report-opengl-device-compare'),
 
-    url(r'^cpu/$', 'userreport.views.ReportCpu',
-        name='report-cpu'),
+    url(r'^cpu/$', 'userreport.views.ReportCpu', name='report-cpu'),
 
     url(r'^ram/$', 'userreport.views.ReportRam', name='report-ram'),
 

@@ -15,7 +15,12 @@ def ReportRam(request):
     counts = {}
     for report in reports:
         # if not report.data_json()['os_linux']: continue
-        ram = report.data_json()['ram_total']
+        report_json = report.data_json()
+
+        ram = 0
+        if "ram_total" in report_json:
+            ram = report_json['ram_total']
+
         counts.setdefault(ram, set()).add(report.user_id_hash)
 
     datapoints = [(0, 0)]

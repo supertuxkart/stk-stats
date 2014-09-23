@@ -31,15 +31,16 @@ class UserReport(models.Model):
         if not hasattr(self, 'cached_json'):
             try:
                 self.cached_json = json.loads(self.data)
-            except:
-                self.cached_json = None
+            except ValueError:
+                self.cached_json = {}
+
         return self.cached_json
 
     def data_json_nocache(self):
         try:
             return json.loads(self.data)
-        except:
-            return None
+        except ValueError:
+            return {}
 
     def clear_cache(self):
         delattr(self, 'cached_json')
@@ -56,40 +57,43 @@ class UserReport_hwdetect(UserReport):
         proxy = True
 
     def os(self):
-        json = self.data_json()
-        if json:
-            if json['os_win']:
+        data_json = self.data_json()
+        if data_json:
+            if data_json['os_win']:
                 return 'Windows'
-            elif json['os_linux']:
+            elif data_json['os_linux']:
                 return 'Linux'
-            elif json['os_macosx']:
+            elif data_json['os_macosx']:
                 return 'OS X'
+
         return 'Unknown'
 
     def gl_renderer(self):
-        json = self.data_json()
-        if json is None or 'GL_RENDERER' not in json:
+        data_json = self.data_json()
+        if 'GL_RENDERER' not in data_json:
             return None
+
         # The renderer string should typically be interpreted as UTF-8
         try:
-            return json['GL_RENDERER'].encode('iso-8859-1').decode('utf-8').strip()
+            return data_json['GL_RENDERER'].encode('iso-8859-1').decode('utf-8').strip()
         except UnicodeError:
-            return json['GL_RENDERER'].strip()
+            return data_json['GL_RENDERER'].strip()
 
     def gl_extensions(self):
-        json = self.data_json()
-        if json is None or 'GL_EXTENSIONS' not in json:
+        data_json = self.data_json()
+        if 'GL_EXTENSIONS' not in data_json:
             return None
-        vals = re.split(r'\s+', json['GL_EXTENSIONS'])
+
+        vals = re.split(r'\s+', data_json['GL_EXTENSIONS'])
         return frozenset(v for v in vals if len(v))  # skip empty strings (e.g. no extensions at all, or leading/trailing space)
 
     def gl_limits(self):
-        json = self.data_json()
-        if json is None:
+        data_json = self.data_json()
+        if not data_json:
             return None
 
         limits = {}
-        for (k, v) in json.items():
+        for (k, v) in data_json.items():
             if not k.startswith('GL_'):
                 continue
             if k == 'GL_VERSION':
@@ -123,16 +127,15 @@ class UserReport_hwdetect(UserReport):
         return r.strip()
 
     def gl_vendor(self):
-        json = self.data_json()
-        return json['GL_VENDOR'].strip()
-
-    """ Construct a nice string identifying the driver
-    It tries all the known possibilities for drivers to find the used one
-    """
+        return self.data_json()['GL_VENDOR'].strip()
 
     def gl_driver(self):
-        json = self.data_json()
-        gfx_drv_ver = json['gfx_drv_ver']
+        """
+        Construct a nice string identifying the driver
+        It tries all the known possibilities for drivers to find the used one
+        """
+        data_json = self.data_json()
+        gfx_drv_ver = data_json['gfx_drv_ver']
 
         # Try the Mesa git style first
         m = re.match(r'^OpenGL \d+\.\d+(?:\.\d+)? (Mesa \d+\.\d+)-devel \(git-([a-f0-9]+)', gfx_drv_ver)
@@ -163,7 +166,7 @@ class UserReport_hwdetect(UserReport):
         # Try to guess the relevant Windows driver
         # (These are the ones listed in lib/sysdep/os/win/wgfx.cpp)
 
-        if json['GL_VENDOR'] == 'NVIDIA Corporation':
+        if data_json['GL_VENDOR'] == 'NVIDIA Corporation':
             possibilities = [
                 # Assume 64-bit takes precedence
                 r'nvoglv64.dll \((.*?)\)',
@@ -171,14 +174,14 @@ class UserReport_hwdetect(UserReport):
                 r'nvoglnt.dll \((.*?)\)'
             ]
 
-        if json['GL_VENDOR'] in ('ATI Technologies Inc.', 'Advanced Micro Devices, Inc.'):
+        if data_json['GL_VENDOR'] in ('ATI Technologies Inc.', 'Advanced Micro Devices, Inc.'):
             possibilities = [
                 r'atioglxx.dll \((.*?)\)',
                 r'atioglx2.dll \((.*?)\)',
                 r'atioglaa.dll \((.*?)\)'
             ]
 
-        if json['GL_VENDOR'] == 'Intel':
+        if data_json['GL_VENDOR'] == 'Intel':
             possibilities = [
                 # Assume 64-bit takes precedence
                 r'ig4icd64.dll \((.*?)\)',

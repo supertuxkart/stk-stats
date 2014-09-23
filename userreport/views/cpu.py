@@ -14,8 +14,8 @@ def ReportCpu(request):
     cpus = {}
 
     for report in reports:
-        json = report.data_json_nocache()
-        if json is None:
+        data_json = report.data_json_nocache()
+        if not data_json:
             continue
 
         cpu = {}
@@ -27,7 +27,7 @@ def ReportCpu(request):
             'cpu_numcaches', 'cpu_pagesize', 'cpu_largepagesize',
             'numa_numnodes', 'numa_factor', 'numa_interleaved',
         ):
-            cpu[x] = json[x]
+            cpu[x] = data_json[x]
 
         cpu['os'] = report.os()
 
@@ -83,10 +83,10 @@ def ReportCpu(request):
             return tuple(caches)
 
         try:
-            cpu['caches'] = fmt_caches(json['x86_dcaches'],
-                                       json['x86_icaches'], fmt_cache)
-            cpu['tlbs'] = fmt_caches(json['x86_tlbs'],
-                                     json['x86_tlbs'], fmt_tlb)
+            cpu['caches'] = fmt_caches(data_json['x86_dcaches'],
+                                       data_json['x86_icaches'], fmt_cache)
+            cpu['tlbs'] = fmt_caches(data_json['x86_tlbs'],
+                                     data_json['x86_tlbs'], fmt_tlb)
         except TypeError:
             continue  # skip on bogus cache data
 
@@ -94,7 +94,7 @@ def ReportCpu(request):
         for (n, _, b) in x86.cap_bits:
             if n.endswith('[2]'):
                 continue
-            if json['x86_caps[%d]' % (b / 32)] & (1 << (b % 32)):
+            if data_json['x86_caps[%d]' % (b / 32)] & (1 << (b % 32)):
                 caps.add(n)
         cpu['caps'] = frozenset(caps)
 

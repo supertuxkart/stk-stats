@@ -74,25 +74,26 @@ def report_performance(request):
     # reports = reports[:500]
 
     def summarise_hwdetect(report):
-        json = report.data_json_nocache()
+        data_json = report.data_json_nocache()
         return {
-            'cpu_identifier': json['cpu_identifier'],
+            'cpu_identifier': data_json['cpu_identifier'],
             'device': report.gl_device_identifier(),
-            'build_debug': json['build_debug'],
-            'build_revision': json['build_revision'],
-            'build_datetime': json['build_datetime'],
-            'gfx_res': (json['video_xres'], json['video_yres']),
+            'build_debug': data_json['build_debug'],
+            'build_revision': data_json['build_revision'],
+            'build_datetime': data_json['build_datetime'],
+            'gfx_res': (data_json['video_xres'], data_json['video_yres']),
         }
 
     def summarise_profile(report):
-        json = report.data_json_nocache()
-        if 'map' in json:
-            mapname = json['map']
-        else:
-            mapname = 'unknown'  # e.g. random maps
+        data_json = report.data_json_nocache()
+
+        mapname = 'unknown'  # e.g. random maps
+        if 'map' in data_json:
+            mapname = data_json['map']
+
         msecs = None
         shadows = False
-        for name, table in json['profiler'].items():
+        for name, table in data_json['profiler'].items():
             m = re.match(r'Profiling Information for: root \(Time in node: (\d+\.\d+) msec/frame\)', name)
             if m:
                 try:
@@ -116,7 +117,7 @@ def report_performance(request):
         return {
             'msecs': msecs,
             'map': mapname,
-            'time': json['time'],
+            'time': data_json['time'],
             'options': '[%s]' % '+'.join(options),
         }
 
@@ -188,21 +189,21 @@ def report_hwdetect_test_data(request):
 
     data = set()
     for report in reports:
-        json = report.data_json_nocache()
+        data_json = report.data_json_nocache()
         relevant = {
-            'os_unix': json['os_unix'],
-            'os_linux': json['os_linux'],
-            'os_macosx': json['os_macosx'],
-            'os_win': json['os_win'],
-            'gfx_card': json['gfx_card'],
-            'gfx_drv_ver': json['gfx_drv_ver'],
-            'gfx_mem': json['gfx_mem'],
-            'GL_VENDOR': json['GL_VENDOR'],
-            'GL_RENDERER': json['GL_RENDERER'],
-            'GL_VERSION': json['GL_VERSION'],
-            'GL_EXTENSIONS': json['GL_EXTENSIONS'],
+            'os_unix': data_json['os_unix'],
+            'os_linux': data_json['os_linux'],
+            'os_macosx': data_json['os_macosx'],
+            'os_win': data_json['os_win'],
+            'gfx_card': data_json['gfx_card'],
+            'gfx_drv_ver': data_json['gfx_drv_ver'],
+            'gfx_mem': data_json['gfx_mem'],
+            'GL_VENDOR': data_json['GL_VENDOR'],
+            'GL_RENDERER': data_json['GL_RENDERER'],
+            'GL_VERSION': data_json['GL_VERSION'],
+            'GL_EXTENSIONS': data_json['GL_EXTENSIONS'],
         }
         data.add(hashabledict(relevant))
 
-    json = json.dumps(list(data), indent=1, sort_keys=True)
-    return HttpResponse('var hwdetectTestData = %s' % json, content_type='text/plain')
+    data_json = json.dumps(list(data), indent=1, sort_keys=True)
+    return HttpResponse('var hwdetectTestData = %s' % data_json, content_type='text/plain')

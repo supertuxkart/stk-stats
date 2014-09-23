@@ -10,11 +10,10 @@ from matplotlib.figure import Figure
 @cache_page(60 * 120)
 def ReportOS(request):
     reports = UserReport_hwdetect.objects
-    reports = reports.filter(data_type = 'hwdetect', data_version__gte = 1)
+    reports = reports.filter(data_type='hwdetect', data_version__gte=1)
 
     counts = {}
     for report in reports:
-        json = report.data_json()
         #if 'linux_release' in json:
         #    counts.setdefault(repr(json['linux_release']), set()).add(report.user_id_hash)
         os = report.os()
@@ -29,6 +28,6 @@ def ReportOS(request):
     ax.axis('equal')
 
     canvas = FigureCanvas(fig)
-    response = HttpResponse(content_type = 'image/png')
+    response = HttpResponse(content_type='image/png')
     canvas.print_png(response, dpi=80)
     return response

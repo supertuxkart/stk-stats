@@ -42,7 +42,9 @@ Make sure you have created a database for yourself.
 
 Run `python manage.py syncdb` to create your database.
 
-To start the Django development server, run `python manage.py runserver`
+To start the Django development server, run `python manage.py runserver`.
+
+To collect all the static files (JS, CSS, Images), run `python manage.py collectstatic`.
 
 Submitting Data
 ===============

@@ -15,7 +15,8 @@ from userreport.settings_local \
     PROJECT_NAME, PROJECT_URL
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
+STATIC_ROOT = BASE_DIR + "/static/"
+STATIC_URL = "/static/"
 
 # Application definition
 
