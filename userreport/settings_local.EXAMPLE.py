@@ -8,7 +8,8 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+# Add the name/ip of the server that is running the stats server
+ALLOWED_HOSTS = ["api.stkaddons.net"]
 
 ADMINS = (
     ('Your Name', 'you@example.com'),
