@@ -26,21 +26,26 @@ class UserReport(models.Model):
     data_version = models.IntegerField(editable=False)
     data = models.TextField(editable=False)
 
-    def data_json(self):
-        """:return json"""
-        if not hasattr(self, 'cached_json'):
+    def get_data_json(self, cache=True):
+        """
+        Get the json data
+        :param cache flag that indicates to cache the json
+        :return json
+        """
+
+        def get_json():
             try:
-                self.cached_json = json.loads(self.data)
+                return json.loads(self.data)
             except ValueError:
-                self.cached_json = {}
+                return {}
 
-        return self.cached_json
+        # Cache the json
+        if cache and not hasattr(self, 'cached_json'):
+            self.cached_json = get_json()
 
-    def data_json_nocache(self):
-        try:
-            return json.loads(self.data)
-        except ValueError:
-            return {}
+            return self.cached_json
+
+        return get_json()
 
     def clear_cache(self):
         delattr(self, 'cached_json')
@@ -56,20 +61,21 @@ class UserReport_hwdetect(UserReport):
     class Meta:
         proxy = True
 
-    def os(self):
-        data_json = self.data_json()
+    def get_os(self):
+        """:return the operating system"""
+        data_json = self.get_data_json()
         if data_json:
-            if data_json['os_win']:
+            if data_json.get('os_win'):
                 return 'Windows'
-            elif data_json['os_linux']:
+            elif data_json.get('os_linux'):
                 return 'Linux'
-            elif data_json['os_macosx']:
+            elif data_json.get('os_macosx'):
                 return 'OS X'
 
         return 'Unknown'
 
     def gl_renderer(self):
-        data_json = self.data_json()
+        data_json = self.get_data_json()
         if 'GL_RENDERER' not in data_json:
             return None
 
@@ -80,7 +86,7 @@ class UserReport_hwdetect(UserReport):
             return data_json['GL_RENDERER'].strip()
 
     def gl_extensions(self):
-        data_json = self.data_json()
+        data_json = self.get_data_json()
         if 'GL_EXTENSIONS' not in data_json:
             return None
 
@@ -88,7 +94,7 @@ class UserReport_hwdetect(UserReport):
         return frozenset(v for v in vals if len(v))  # skip empty strings (e.g. no extensions at all, or leading/trailing space)
 
     def gl_limits(self):
-        data_json = self.data_json()
+        data_json = self.get_data_json()
         if not data_json:
             return None
 
@@ -96,21 +102,27 @@ class UserReport_hwdetect(UserReport):
         for (k, v) in data_json.items():
             if not k.startswith('GL_'):
                 continue
+
             if k == 'GL_VERSION':
                 m = re.match(r'^(\d+\.\d+).*', v)
                 if m:
                     limits[k] = '%s [...]' % m.group(1)
                 continue
+
             if k in ('GL_RENDERER', 'GL_EXTENSIONS'):
                 continue
+
             # Hide some values that got deleted from the report in r8953, for consistency
             if k in ('GL_MAX_COLOR_MATRIX_STACK_DEPTH', 'GL_FRAGMENT_PROGRAM_ARB.GL_MAX_PROGRAM_ADDRESS_REGISTERS_ARB', 'GL_FRAGMENT_PROGRAM_ARB.GL_MAX_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB'):
                 continue
+
             # Hide some pixel depth values that are not really correlated with device
             if k in ('GL_RED_BITS', 'GL_GREEN_BITS', 'GL_BLUE_BITS', 'GL_ALPHA_BITS', 'GL_INDEX_BITS', 'GL_DEPTH_BITS', 'GL_STENCIL_BITS',
                      'GL_ACCUM_RED_BITS', 'GL_ACCUM_GREEN_BITS', 'GL_ACCUM_BLUE_BITS', 'GL_ACCUM_ALPHA_BITS'):
                 continue
+
             limits[k] = v
+
         return limits
 
     def gl_device_identifier(self):
@@ -124,17 +136,18 @@ class UserReport_hwdetect(UserReport):
             r)
         if m:
             r = m.group(1)
+
         return r.strip()
 
     def gl_vendor(self):
-        return self.data_json()['GL_VENDOR'].strip()
+        return self.get_data_json()['GL_VENDOR'].strip()
 
     def gl_driver(self):
         """
         Construct a nice string identifying the driver
         It tries all the known possibilities for drivers to find the used one
         """
-        data_json = self.data_json()
+        data_json = self.get_data_json()
         gfx_drv_ver = data_json['gfx_drv_ver']
 
         # Try the Mesa git style first

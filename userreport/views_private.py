@@ -74,7 +74,7 @@ def report_performance(request):
     # reports = reports[:500]
 
     def summarise_hwdetect(report):
-        data_json = report.data_json_nocache()
+        data_json = report.get_data_json(cache=False)
         return {
             'cpu_identifier': data_json['cpu_identifier'],
             'device': report.gl_device_identifier(),
@@ -85,7 +85,7 @@ def report_performance(request):
         }
 
     def summarise_profile(report):
-        data_json = report.data_json_nocache()
+        data_json = report.get_data_json(cache=False)
 
         mapname = 'unknown'  # e.g. random maps
         if 'map' in data_json:
@@ -189,7 +189,7 @@ def report_hwdetect_test_data(request):
 
     data = set()
     for report in reports:
-        data_json = report.data_json_nocache()
+        data_json = report.get_data_json(cache=False)
         relevant = {
             'os_unix': data_json['os_unix'],
             'os_linux': data_json['os_linux'],

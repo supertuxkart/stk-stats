@@ -14,12 +14,8 @@ def ReportRam(request):
 
     counts = {}
     for report in reports:
-        # if not report.data_json()['os_linux']: continue
-        report_json = report.data_json()
-
-        ram = 0
-        if "ram_total" in report_json:
-            ram = report_json['ram_total']
+        report_json = report.get_data_json()
+        ram = report_json.get("ram_total", 0)
 
         counts.setdefault(ram, set()).add(report.user_id_hash)
 
@@ -50,4 +46,5 @@ def ReportRam(request):
     canvas = FigureCanvas(fig)
     response = HttpResponse(content_type='image/png')
     canvas.print_png(response, dpi=80)
+
     return response

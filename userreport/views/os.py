@@ -16,7 +16,7 @@ def ReportOS(request):
     for report in reports:
         #if 'linux_release' in json:
         #    counts.setdefault(repr(json['linux_release']), set()).add(report.user_id_hash)
-        os = report.os()
+        os = report.get_os()
         counts.setdefault(os, set()).add(report.user_id_hash)
 
     fig = Figure(figsize=(16, 10))
@@ -30,4 +30,5 @@ def ReportOS(request):
     canvas = FigureCanvas(fig)
     response = HttpResponse(content_type='image/png')
     canvas.print_png(response, dpi=80)
+
     return response
