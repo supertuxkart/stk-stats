@@ -21,9 +21,9 @@ def ReportOS(request):
     fig = Figure(figsize=(16, 10))
     ax = fig.add_subplot(111)
 
-    # OS => user_id_hash
-    ax.pie([len(os[1]) for os in counts.items()],
-           labels=['{0}: {1}'.format(key, len(counts[key])) for key in counts.keys()],
+    os_counts = [(os, len(counts[os])) for os in counts.keys()]
+    ax.pie([key[1] for key in os_counts],
+           labels=['{0}: {1}'.format(key[0], key[1]) for key in os_counts],
            autopct='%1.1f%%')
     ax.axis('equal')
 
