@@ -6,7 +6,6 @@ from django.views.decorators.cache import cache_page
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-
 @cache_page(60 * 120)
 def ReportOS(request):
     reports = UserReport_hwdetect.objects
@@ -22,7 +21,8 @@ def ReportOS(request):
     fig = Figure(figsize=(16, 10))
     ax = fig.add_subplot(111)
 
-    ax.pie([len(os) for os in counts.items()],
+    # OS => user_id_hash
+    ax.pie([len(os[1]) for os in counts.items()],
            labels=['{0}: {1}'.format(key, len(counts[key])) for key in counts.keys()],
            autopct='%1.1f%%')
     ax.axis('equal')
