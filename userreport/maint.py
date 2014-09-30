@@ -1,4 +1,4 @@
-from userreport.models import UserReport_hwdetect, GraphicsDevice, \
+from userreport.models import UserReport, UserReport_hwdetect, GraphicsDevice, \
     GraphicsExtension, GraphicsLimit
 from django.db import transaction
 
@@ -23,11 +23,17 @@ def _remove_old_records():
 
 def _get_devices():
     LOG.info('Collecting data')
+
     reports = UserReport_hwdetect.objects.filter(data_type='hwdetect',
                                                  data_version__gte=1)
     devices = {}
     count = 0
     for report in reports:
+        # horrible hack to fix double GL_EXTENSION key in the data, TODO REMOVE
+        if ',"GL_EXTENSIONS":""' in report.data:
+            report.data = report.data.replace(',"GL_EXTENSIONS":""', "")
+            report.save()
+
         device = report.gl_device_identifier()
         vendor = report.gl_vendor()
         renderer = report.gl_renderer()
@@ -47,6 +53,7 @@ def _get_devices():
         if count % 100 == 0:
             LOG.info("%d / %d..." % (count, len(reports)))
     LOG.info('Collected %d devices' % len(reports))
+
     return devices
 
 
@@ -63,13 +70,13 @@ def _save_devices(devices):
         device_id = gd.id
 
         # Add GraphicsExtension
-        if len(exts):
+        if exts:
             for ext in exts:
                 e = GraphicsExtension(device_id=device_id, name=ext)
                 e.save()
 
         # Add GraphicsLimit
-        if len(limits):
+        if limits:
             for limit in limits:
                 l = GraphicsLimit(device_id=device_id, name=limit[0],
                                   value=limit[1])

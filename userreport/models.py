@@ -33,19 +33,19 @@ class UserReport(models.Model):
         :return json
         """
 
-        def get_json():
+        def get_json(data):
             try:
-                return json.loads(self.data)
+                return json.loads(data)
             except ValueError:
                 return {}
 
         # Cache the json
         if cache and not hasattr(self, 'cached_json'):
-            self.cached_json = get_json()
+            self.cached_json = get_json(self.data)
 
             return self.cached_json
 
-        return get_json()
+        return get_json(self.data)
 
     def clear_cache(self):
         delattr(self, 'cached_json')

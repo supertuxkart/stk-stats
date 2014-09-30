@@ -133,7 +133,7 @@ def ReportOpenglDevices(request, selected):
     devices = {}
     gl_renderers = set()
 
-    reports = GraphicsDevice.objects.filter(device_name__in = selected)
+    reports = GraphicsDevice.objects.filter(device_name__in=selected)
     for report in reports:
         exts = frozenset(e.name for e in report.graphicsextension_set.all())
         all_exts |= exts
@@ -155,7 +155,7 @@ def ReportOpenglDevices(request, selected):
     for (renderer, v) in devices.items():
         for (caps, versions) in v.items():
             distinct_devices.append((renderer, sorted(versions), caps))
-    distinct_devices.sort(key = lambda x: (x[0]['device'], x))
+    distinct_devices.sort(key=lambda x: (x[0]['device'], x))
 
     return render_to_response('reports/opengl_device.html', {
         'selected': selected,
@@ -166,8 +166,10 @@ def ReportOpenglDevices(request, selected):
         'gl_renderers': gl_renderers,
     })
 
+
 def ReportOpenglDevice(request, device):
     return ReportOpenglDevices(request, [device])
+
 
 def ReportOpenglDeviceCompare(request):
     return ReportOpenglDevices(request, request.GET.getlist('d'))
