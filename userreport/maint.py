@@ -24,7 +24,7 @@ def _remove_old_records():
 def _get_devices():
     LOG.info('Collecting data')
     reports = UserReport_hwdetect.objects.filter(data_type='hwdetect',
-                                                 data_version__gte=3)
+                                                 data_version__gte=1)
     devices = {}
     count = 0
     for report in reports:
