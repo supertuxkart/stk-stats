@@ -33,7 +33,7 @@ def ReportRam(request):
     ax.grid(True)
 
     if accum:  # We have data
-        ax.step([d[0] for d in datapoints], [100 * 1 - (float(d[1]) / accum) for d in datapoints])
+        ax.step([d[0] for d in datapoints], [100 * (1 - float(d[1]) / accum) for d in datapoints])
 
     ax.set_xticks([0, 256, 512] + [1024 * n for n in range(1, 9)])
     ax.set_xlim(0, 8192)
