@@ -28,11 +28,16 @@ def _get_devices():
                                                  data_version__gte=1)
     devices = {}
     count = 0
+    len_reports = len(reports)
     for report in reports:
         # horrible hack to fix double GL_EXTENSION key in the data, TODO REMOVE
         if ',"GL_EXTENSIONS":""' in report.data:
+            LOG.info("Removed double GL_EXTENSION")
             report.data = report.data.replace(',"GL_EXTENSIONS":""', "")
             report.save()
+
+        if not report.has_data():
+            continue
 
         device = report.gl_device_identifier()
         vendor = report.gl_vendor()
@@ -44,15 +49,14 @@ def _get_devices():
         report.clear_cache()
 
         devices.setdefault(
-            (device, vendor, renderer, os, driver, exts,
-             tuple(sorted(limits.items()))),
+            (device, vendor, renderer, os, driver, exts, tuple(sorted(limits.items()))),
             set()
         ).add(report.user_id_hash)
 
         count += 1
         if count % 100 == 0:
-            LOG.info("%d / %d..." % (count, len(reports)))
-    LOG.info('Collected %d devices' % len(reports))
+            LOG.info("%d / %d..." % (count, len_reports))
+    LOG.info('Collected %d devices' % len_reports)
 
     return devices
 

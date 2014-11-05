@@ -5,6 +5,9 @@ from django.db import models
 
 import json
 import re
+import logging
+
+LOG = logging.getLogger(__name__)
 
 
 class UserReport(models.Model):
@@ -37,6 +40,7 @@ class UserReport(models.Model):
             try:
                 return json.loads(data)
             except ValueError:
+                LOG.warning("The data_json is invalid for id = %d" % self.id)
                 return {}
 
         # Cache the json
@@ -53,8 +57,8 @@ class UserReport(models.Model):
     def downcast(self):
         if self.data_type == 'hwdetect':
             return UserReport_hwdetect.objects.get(id=self.id)
-        else:
-            return self
+
+        return self
 
 
 class UserReport_hwdetect(UserReport):
@@ -74,10 +78,16 @@ class UserReport_hwdetect(UserReport):
 
         return 'Unknown'
 
+    def has_data(self):
+        if self.get_data_json():
+            return True
+
+        return False
+
     def gl_renderer(self):
         data_json = self.get_data_json()
         if 'GL_RENDERER' not in data_json:
-            return None
+            return ""
 
         # The renderer string should typically be interpreted as UTF-8
         try:
@@ -95,8 +105,6 @@ class UserReport_hwdetect(UserReport):
 
     def gl_limits(self):
         data_json = self.get_data_json()
-        if not data_json:
-            return None
 
         limits = {}
         for (k, v) in data_json.items():
@@ -140,7 +148,7 @@ class UserReport_hwdetect(UserReport):
         return r.strip()
 
     def gl_vendor(self):
-        return self.get_data_json()['GL_VENDOR'].strip()
+        return self.get_data_json().get('GL_VENDOR', '').strip()
 
     def gl_driver(self):
         """
@@ -148,6 +156,9 @@ class UserReport_hwdetect(UserReport):
         It tries all the known possibilities for drivers to find the used one
         """
         data_json = self.get_data_json()
+        if 'gfx_drv_ver' not in data_json or 'GL_VENDOR' not in data_json:
+            return ''
+
         gfx_drv_ver = data_json['gfx_drv_ver']
 
         # Try the Mesa git style first
