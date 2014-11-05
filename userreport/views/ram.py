@@ -14,6 +14,9 @@ def report_ram(request):
 
     counts = {}
     for report in reports:
+        if not report.has_data():
+            continue
+
         report_json = report.get_data_json()
         ram = report_json.get("ram_total", 0)
 

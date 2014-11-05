@@ -51,6 +51,12 @@ class UserReport(models.Model):
 
         return get_json(self.data)
 
+    def has_data(self):
+        if self.get_data_json():
+            return True
+
+        return False
+
     def clear_cache(self):
         delattr(self, 'cached_json')
 
@@ -77,12 +83,6 @@ class UserReport_hwdetect(UserReport):
                 return 'OS X'
 
         return 'Unknown'
-
-    def has_data(self):
-        if self.get_data_json():
-            return True
-
-        return False
 
     def gl_renderer(self):
         data_json = self.get_data_json()

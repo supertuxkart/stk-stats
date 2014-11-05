@@ -15,6 +15,9 @@ def report_os(request):
     for report in reports:
         #if 'linux_release' in json:
         #    counts.setdefault(repr(json['linux_release']), set()).add(report.user_id_hash)
+        if not report.has_data():
+            continue
+
         os = report.get_os()
         counts.setdefault(os, set()).add(report.user_id_hash)
 
