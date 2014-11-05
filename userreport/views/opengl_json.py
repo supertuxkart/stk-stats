@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 import json
 
 
-def ReportOpenglJson(request):
+def report_opengl_json(request):
     devices = {}
 
     reports = GraphicsDevice.objects.all()
@@ -31,5 +31,5 @@ def ReportOpenglJson(request):
     return HttpResponse(json_string, content_type='text/plain')
 
 
-def ReportOpenglJsonFormat(request):
+def report_opengl_json_format(request):
     return render_to_response('jsonformat.html')

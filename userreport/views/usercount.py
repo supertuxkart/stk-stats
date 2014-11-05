@@ -10,7 +10,7 @@ import matplotlib.artist
 
 
 @cache_page(60 * 120)
-def ReportUsercount(request):
+def report_user_count(request):
     reports = UserReport.objects.order_by('upload_date')
 
     users_by_date = {}

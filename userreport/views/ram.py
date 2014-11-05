@@ -8,7 +8,7 @@ from matplotlib.figure import Figure
 
 
 @cache_page(60 * 120)
-def ReportRam(request):
+def report_ram(request):
     reports = UserReport.objects
     reports = reports.filter(data_type='hwdetect', data_version__gte=1)
 

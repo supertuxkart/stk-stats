@@ -12,7 +12,7 @@ from django.views.decorators.http import require_http_methods
 
 @csrf_exempt
 @require_http_methods(['POST'])
-def Upload(request):
+def report_upload(request):
 
     try:
         decompressed = zlib.decompress(request.body)
@@ -35,8 +35,7 @@ def Upload(request):
     # Fix the IP address if running via proxy on localhost
     if uploader == '127.0.0.1':
         try:
-            uploader = request.META['HTTP_X_FORWARDED_FOR']\
-                              .split(',')[0].strip()
+            uploader = request.META['HTTP_X_FORWARDED_FOR'].split(',')[0].strip()
         except KeyError:
             pass
 

@@ -1,7 +1,7 @@
 # http://code.djangoproject.com/attachment/ticket/5908/cycle.py
 
 from django import template
-from django.template import Node, Variable
+from django.template import Node, Variable, TemplateSyntaxError
 from itertools import cycle as itertools_cycle
 
 register = template.Library()

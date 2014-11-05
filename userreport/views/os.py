@@ -7,7 +7,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 @cache_page(60 * 120)
-def ReportOS(request):
+def report_os(request):
     reports = UserReport_hwdetect.objects
     reports = reports.filter(data_type='hwdetect', data_version__gte=1)
 

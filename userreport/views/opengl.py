@@ -2,6 +2,7 @@ from userreport.models import GraphicsDevice, GraphicsExtension, GraphicsLimit
 from userreport.util.gl import glext_versions
 from userreport.util import hashabledict
 
+from django.http import Http404
 from django.db import connection
 from django.db.models import Sum
 from django.shortcuts import render_to_response
@@ -12,7 +13,7 @@ import re
 
 
 @cache_page(60 * 120)
-def ReportOpenglIndex(request):
+def report_opengl_index(request):
     num_users = GraphicsDevice.objects.\
         aggregate(Sum('usercount'))['usercount__sum']
 
@@ -45,7 +46,7 @@ def ReportOpenglIndex(request):
 
 
 @cache_page(60 * 120)
-def ReportOpenglFeature(request, feature):
+def report_opengl_feature(request, feature):
     all_values = set()
     usercounts = {}
     values = {}
@@ -120,7 +121,7 @@ def ReportOpenglFeature(request, feature):
 
 
 @cache_page(60 * 120)
-def ReportOpenglDevices(request, selected):
+def report_opengl_devices(request, selected):
     cursor = connection.cursor()
     cursor.execute('''
         SELECT DISTINCT device_name
@@ -167,9 +168,9 @@ def ReportOpenglDevices(request, selected):
     })
 
 
-def ReportOpenglDevice(request, device):
-    return ReportOpenglDevices(request, [device])
+def report_opengl_device(request, device):
+    return report_opengl_devices(request, [device])
 
 
-def ReportOpenglDeviceCompare(request):
-    return ReportOpenglDevices(request, request.GET.getlist('d'))
+def report_opengl_device_compare(request):
+    return report_opengl_devices(request, request.GET.getlist('d'))

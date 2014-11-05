@@ -12,34 +12,34 @@ urlpatterns = patterns(
 
     url(r'^$', 'userreport.views.index', name='index'),
 
-    url(r'^upload/v1/$', 'userreport.views.Upload', name='upload-v1'),
+    url(r'^upload/v1/$', 'userreport.views.report_upload', name='upload-v1'),
 
-    url(r'^opengl/$', 'userreport.views.ReportOpenglIndex', name="report-opengl-index"),
+    url(r'^opengl/$', 'userreport.views.report_opengl_index', name="report-opengl-index"),
 
-    url(r'^opengl/json$', 'userreport.views.ReportOpenglJson',
+    url(r'^opengl/json$', 'userreport.views.report_opengl_json',
         name='report-opengl-json'),
 
-    url(r'^opengl/json/format$', 'userreport.views.ReportOpenglJsonFormat',
+    url(r'^opengl/json/format$', 'userreport.views.report_opengl_json_format',
         name='report-opengl-json-format'),
 
     url(r'^opengl/feature/(?P<feature>[^/]+)$',
-        'userreport.views.ReportOpenglFeature',
+        'userreport.views.report_opengl_feature',
         name='report-opengl-feature'),
 
     url(r'^opengl/device/(?P<device>.+)$',
-        'userreport.views.ReportOpenglDevice',
+        'userreport.views.report_opengl_device',
         name='report-opengl-device'),
 
-    url(r'^opengl/device', 'userreport.views.ReportOpenglDeviceCompare',
+    url(r'^opengl/device', 'userreport.views.report_opengl_device_compare',
         name='report-opengl-device-compare'),
 
-    url(r'^cpu/$', 'userreport.views.ReportCpu', name='report-cpu'),
+    url(r'^cpu/$', 'userreport.views.report_cpu', name='report-cpu'),
 
-    url(r'^ram/$', 'userreport.views.ReportRam', name='report-ram'),
+    url(r'^ram/$', 'userreport.views.report_ram', name='report-ram'),
 
-    url(r'^os/$', 'userreport.views.ReportOS', name='report-os'),
+    url(r'^os/$', 'userreport.views.report_os', name='report-os'),
 
-    url(r'^usercount/$', 'userreport.views.ReportUsercount',
+    url(r'^usercount/$', 'userreport.views.report_user_count',
         name='report-usercount'),
 
     url(r'^admin/', include(admin.site.urls)),

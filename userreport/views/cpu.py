@@ -6,9 +6,9 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 
-def ReportCpu(request):
+def report_cpu(request):
     reports = UserReport_hwdetect.objects
-    reports = reports.filter(data_type='hwdetect', data_version__gte=4)
+    reports = reports.filter(data_type='hwdetect', data_version__gte=1)
 
     all_users = set()
     cpus = {}

@@ -46,7 +46,7 @@ def report_messages(request):
 
 def report_profile(request):
     reports = UserReport.objects.order_by('-upload_date')
-    reports = reports.filter(data_type='profile', data_version__gte=2)
+    reports = reports.filter(data_type='profile', data_version__gte=1)
 
     return render_reports(request, reports, 'reports/profile.html', {'pagesize': 20})
 
@@ -68,8 +68,8 @@ def report_gfx(request):
 def report_performance(request):
     reports = UserReport.objects.order_by('upload_date')
     reports = reports.filter(
-        Q(data_type='hwdetect', data_version__gte=5) |
-        Q(data_type='profile', data_version__gte=2)
+        Q(data_type='hwdetect', data_version__gte=1) |
+        Q(data_type='profile', data_version__gte=1)
     )
     # reports = reports[:500]
 

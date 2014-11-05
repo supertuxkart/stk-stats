@@ -33,7 +33,7 @@ OpenGL capabilities report
 
 {% block content %}
 
-<p>(<a href="{% url 'userreport.views.ReportOpenglIndex' %}">Back to index page.</a>)</p>
+<p>(<a href="{% url 'userreport.views.report_opengl_index' %}">Back to index page.</a>)</p>
 
 <p>The table here shows the features reported for devices with the following GL_RENDERER strings:</p>
 <ul>
@@ -65,7 +65,7 @@ Cells are marked with bold when their value differs from the previous cell in th
   {% endif %}
 
   <tr title="{{ ext }}">
-    <th><nobr><a href="{% url 'userreport.views.ReportOpenglFeature' ext %}">{{ ext }}</a> <a href="{{ ext|glext_spec_link }}">(spec)</a></nobr>
+    <th><nobr><a href="{% url 'userreport.views.report_opengl_feature' ext %}">{{ ext }}</a> <a href="{{ ext|glext_spec_link }}">(spec)</a></nobr>
     {% for device in devices %}
       <td class="{% if ext in device.2.1 %}true{% else %}false{% endif %}{% cycle ' alt' '' %}">
     {% endfor %}
@@ -82,7 +82,7 @@ Cells are marked with bold when their value differs from the previous cell in th
   {% endif %}
 
   <tr title="{{ limit }}">
-    <th><nobr><a href="{% url 'userreport.views.ReportOpenglFeature' limit %}">{{ limit|prettify_gl_title }}</a></nobr>
+    <th><nobr><a href="{% url 'userreport.views.report_opengl_feature' limit %}">{{ limit|prettify_gl_title }}</a></nobr>
     {% for device in devices %}
       <td class="{% cycle 'alt' '' %}{% ifchanged device.2.0|dictget:limit %}{% if not forloop.first %} changed{% endif %}{% endifchanged %}">{{ device.2.0|dictget:limit }}
     {% endfor %}
@@ -90,7 +90,7 @@ Cells are marked with bold when their value differs from the previous cell in th
 </table>
 
 <h2>Compare with other devices</h2>
-<form action="{% url 'userreport.views.ReportOpenglDeviceCompare' %}" method=get>
+<form action="{% url 'userreport.views.report_opengl_device_compare' %}" method=get>
 <ul>
 {% for d in all_devices|sort %}
 <li><label><input name=d value="{{ d }}" type=checkbox{% if d in selected %} checked{% endif %}> {{ d }}</label>
