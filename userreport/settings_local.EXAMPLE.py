@@ -9,7 +9,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 # Add the name/ip of the server that is running the stats server
-ALLOWED_HOSTS = ["api.stkaddons.net"]
+ALLOWED_HOSTS = ["addons.supertuxkart.net"]
 
 ADMINS = (
     ('Your Name', 'you@example.com'),
