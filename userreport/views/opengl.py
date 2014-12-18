@@ -2,7 +2,7 @@ from userreport.models import GraphicsDevice, GraphicsExtension, GraphicsLimit
 from userreport.util.gl import glext_versions
 from userreport.util import hashabledict
 
-from django.http import Http404
+from django.http import HttpResponseNotFound
 from django.db import connection
 from django.db.models import Sum
 from django.shortcuts import render_to_response
@@ -10,7 +10,9 @@ from django.template import RequestContext
 from django.views.decorators.cache import cache_page
 
 import re
+import logging
 
+LOG = logging.getLogger(__name__)
 
 @cache_page(60 * 120)
 def report_opengl_index(request):
@@ -89,10 +91,13 @@ def report_opengl_feature(request, feature):
 
         for val, vendor, renderer, os, driver, device_name, usercount in cursor:
             # Convert to int/float if possible, for better sorting
-            try: val = int(val)
+            try:
+                val = int(val)
             except ValueError:
-                try: val = float(val)
-                except ValueError: pass
+                try:
+                    val = float(val)
+                except ValueError:
+                    pass
 
             all_values.add(val)
             usercounts[val] = usercounts.get(val, 0) + usercount
@@ -106,7 +111,7 @@ def report_opengl_feature(request, feature):
             v['drivers'].add(driver)
 
     if values.keys() == [] or values.keys() == ['false']:
-        raise Http404
+        return HttpResponseNotFound()
 
     num_users = sum(usercounts.values())
 
@@ -142,12 +147,14 @@ def report_opengl_devices(request, selected):
         limits = dict((l.name, l.value) for l in report.graphicslimit_set.all())
         all_limits |= set(limits.keys())
 
-        devices.setdefault(hashabledict({'device': report.device_name, 'os': report.os}), {}).setdefault((hashabledict(limits), exts), set()).add(report.driver)
+        devices.setdefault(
+            hashabledict({'device': report.device_name, 'os': report.os}), {}
+        ).setdefault((hashabledict(limits), exts), set()).add(report.driver)
 
         gl_renderers.add(report.renderer)
 
     if len(selected) == 1 and len(devices) == 0:
-        raise Http404
+        return HttpResponseNotFound()
 
     all_limits = sorted(all_limits)
     all_exts = sorted(all_exts)
@@ -156,7 +163,8 @@ def report_opengl_devices(request, selected):
     for (renderer, v) in devices.items():
         for (caps, versions) in v.items():
             distinct_devices.append((renderer, sorted(versions), caps))
-    distinct_devices.sort(key=lambda x: (x[0]['device'], x))
+
+    distinct_devices.sort(key=lambda x: (x[0]["device"], x[0]["os"]))
 
     return render_to_response('reports/opengl_device.html', {
         'selected': selected,
