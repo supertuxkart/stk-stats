@@ -1,12 +1,16 @@
 from userreport.models import UserReport
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_page
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.dates import DateFormatter
 import matplotlib.artist
+
+import logging
+
+LOG = logging.getLogger(__name__)
 
 
 @cache_page(60 * 120)
@@ -48,5 +52,11 @@ def report_user_count(request):
 
     canvas = FigureCanvas(fig)
     response = HttpResponse(content_type='image/png')
-    canvas.print_png(response, dpi=80)
+
+    try:
+        canvas.print_png(response, dpi=80)
+    except ValueError:
+        LOG.info('Warning on displaying usercount data(possible empty stats)')
+        return HttpResponse('<h1>Warning: No stats data available</h1>')
+
     return response
