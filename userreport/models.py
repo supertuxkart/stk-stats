@@ -116,6 +116,7 @@ class UserReport_hwdetect(UserReport):
                 m = re.match(r'^(\d+\.\d+).*', v)
                 if m:
                     limits[k] = '%s [...]' % m.group(1)
+                    limits['GL_VERSION' + '_COMPLETE'] = v  # non standard
                 continue
 
             if k in ('GL_RENDERER', 'GL_EXTENSIONS'):

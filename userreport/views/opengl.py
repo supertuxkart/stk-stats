@@ -110,7 +110,7 @@ def report_opengl_feature(request, feature):
             v['usercount'] += usercount
             v['drivers'].add(driver)
 
-    if values.keys() == [] or values.keys() == ['false']:
+    if not values or values.keys() == ['false']:
         return HttpResponseNotFound()
 
     num_users = sum(usercounts.values())
