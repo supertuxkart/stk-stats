@@ -98,6 +98,7 @@ class UserReport_hwdetect(UserReport):
     def gl_extensions(self):
         data_json = self.get_data_json()
         if 'GL_EXTENSIONS' not in data_json:
+            LOG.warning("The GL_EXTENSIONS does not exist for id = %d" % self.id)
             return None
 
         vals = re.split(r'\s+', data_json['GL_EXTENSIONS'])

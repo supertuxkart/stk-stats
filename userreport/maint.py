@@ -30,12 +30,6 @@ def _get_devices():
     count = 0
     len_reports = len(reports)
     for report in reports:
-        # horrible hack to fix double GL_EXTENSION key in the data, TODO REMOVE
-        if ',"GL_EXTENSIONS":""' in report.data:
-            LOG.info("Removed double GL_EXTENSION")
-            report.data = report.data.replace(',"GL_EXTENSIONS":""', "")
-            report.save()
-
         if not report.has_data():
             continue
 
