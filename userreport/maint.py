@@ -1,4 +1,4 @@
-from userreport.models import UserReport, UserReport_hwdetect, GraphicsDevice, \
+from userreport.models import UserReport_hwdetect, GraphicsDevice, \
     GraphicsExtension, GraphicsLimit
 from django.db import transaction
 

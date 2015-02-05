@@ -1,5 +1,5 @@
 # This file is mainly for detecting the graphics used and storing these
-# informations in string that are later used for the report
+# information in string that are later used for the report
 
 from django.db import models
 
