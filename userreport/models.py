@@ -11,7 +11,7 @@ LOG = logging.getLogger(__name__)
 
 
 class UserReport(models.Model):
-    uploader = models.IPAddressField(editable=False)
+    uploader = models.GenericIPAddressField(editable=False)
 
     # Hex SHA-1 digest of user's reported ID
     # (The hashing means that publishing the database won't let people upload
@@ -52,10 +52,7 @@ class UserReport(models.Model):
         return get_json(self.data)
 
     def has_data(self):
-        if self.get_data_json():
-            return True
-
-        return False
+        return bool(self.get_data_json())
 
     def clear_cache(self):
         delattr(self, 'cached_json')
@@ -81,6 +78,8 @@ class UserReport_hwdetect(UserReport):
                 return 'Linux'
             elif data_json.get('os_macosx'):
                 return 'OS X'
+            elif data_json.get('os_unix'):
+                return 'Other Unix'
 
         return 'Unknown'
 
@@ -102,7 +101,7 @@ class UserReport_hwdetect(UserReport):
             return None
 
         vals = re.split(r'\s+', data_json['GL_EXTENSIONS'])
-        return frozenset(v for v in vals if len(v))  # skip empty strings (e.g. no extensions at all, or leading/trailing space)
+        return frozenset(v for v in vals if v)  # skip empty strings (e.g. no extensions at all, or leading/trailing space)
 
     def gl_limits(self):
         data_json = self.get_data_json()

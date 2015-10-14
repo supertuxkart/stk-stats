@@ -27,7 +27,7 @@ def report_upload(request):
         data_type = POST['type']
         data_version = int(POST['version'])
         data = POST['data']
-    except KeyError as e:
+    except KeyError:
         return HttpResponseBadRequest('Missing required fields.\n',
                                       content_type='text/plain')
 
@@ -39,8 +39,7 @@ def report_upload(request):
         except KeyError:
             pass
 
-    user_id_bytes = user_id.encode('utf-8')
-    user_id_hash = hashlib.sha1(user_id_bytes).hexdigest()
+    user_id_hash = hashlib.sha1(user_id.encode('utf-8')).hexdigest()
 
     report = UserReport(
         uploader=uploader,

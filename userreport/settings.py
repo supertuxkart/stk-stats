@@ -58,7 +58,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -72,7 +71,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (

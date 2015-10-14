@@ -40,7 +40,7 @@ edit the settings inside that file to match your environment.
 
 Make sure you have created a database for yourself.
 
-Run `python manage.py syncdb` to create your database.
+Run `python manage.py migrate` to create your database.
 
 To start the Django development server, run `python manage.py runserver`.
 
