@@ -4,13 +4,13 @@ from collections import defaultdict
 
 from userreport.models import UserReport_hwdetect
 from userreport.settings_local import DATABASES
+import pymysql
 import pymysql.err
 import pymysql.cursors
 
 LOG = logging.getLogger(__name__)
 
 
-# @profile
 def refresh_data():
     connection = pymysql.connect(host=DATABASES['default']['HOST'],
                                  user=DATABASES['default']['USER'],
@@ -113,4 +113,3 @@ def _save_devices(connection, devices):
 
     connection.commit()
     return time.time() - start_time
-
