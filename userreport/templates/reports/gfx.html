@@ -2,28 +2,34 @@
 {% load report_tags %}
 
 {% block content %}
-<table>
-  <tr>
-    <th>Received
-    <th>User
-    <th>gfx_card
-    <th>gfx_drv_ver
-    <th>uname_machine
-    <th>uname_release
-    <th>uname_sysname
-    <th>uname_version
-{% for report in report_page.object_list %}
-{% with json=report.data_json %}
-  <tr {% cycle 'class=alt' '' %}>
-    <td>{{ report.upload_date|date:"Y-m-d" }}&nbsp;{{ report.upload_date|date:"H:i:s" }}
-    <td><a href="{% url userreport.views_private.report_user report.user_id_hash %}"><abbr title="{{ report.user_id_hash }}">{{ report.user_id_hash|slice:"0:8" }}</abbr></a>
-    <td>{{ json.gfx_card }}
-    <td>{{ json.gfx_drv_ver }}
-    <td>{{ json.uname_machine }}
-    <td>{{ json.uname_release }}
-    <td>{{ json.uname_sysname }}
-    <td>{{ json.uname_version }}
-{% endwith %}
-{% endfor %}
-</table>
+    <table>
+        <th>
+        <th>Received</th>
+        <th>User</th>
+        <th>gfx_card</th>
+        <th>gfx_drv_ver</th>
+        <th>uname_machine</th>
+        <th>uname_release</th>
+        <th>uname_sysname</th>
+        <th>uname_version</th>
+        </tr>
+        {% for report in report_page.object_list %}
+            {% with json=report.data_json %}
+                <tr {% cycle 'class=alt' '' %}>
+                    <td>{{ report.upload_date|date:"Y-m-d" }}&nbsp;{{ report.upload_date|date:"H:i:s" }}</td>
+                    <td>
+                        <a href="{% url userreport.views_private.report_user report.user_id_hash %}">
+                            <abbr title="{{ report.user_id_hash }}">{{ report.user_id_hash|slice:"0:8" }}</abbr>
+                        </a>
+                    </td>
+                    <td>{{ json.gfx_card }}</td>
+                    <td>{{ json.gfx_drv_ver }}</td>
+                    <td>{{ json.uname_machine }}</td>
+                    <td>{{ json.uname_release }}</td>
+                    <td>{{ json.uname_sysname }}</td>
+                    <td>{{ json.uname_version }}</td>
+                </tr>
+            {% endwith %}
+        {% endfor %}
+    </table>
 {% endblock %}
