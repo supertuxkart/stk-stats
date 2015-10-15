@@ -9,10 +9,13 @@ Sphinx==1.3.1
 alabaster==0.7.6
 certifi==2015.9.6.2
 docutils==0.12
+flake8==2.4.1
 matplotlib==1.4.3
+mccabe==0.3.1
 nose==1.3.7
 numpy==1.10.1
-pep8==1.6.2
+pep8==1.5.7
+pyflakes==0.8.1
 pyparsing==2.0.3
 python-dateutil==2.4.2
 python3-memcached==1.51
