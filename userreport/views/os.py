@@ -6,6 +6,7 @@ from django.views.decorators.cache import cache_page
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+
 @cache_page(60 * 120)
 def report_os(request):
     reports = UserReport_hwdetect.objects
@@ -13,7 +14,7 @@ def report_os(request):
 
     counts = {}
     for report in reports:
-        #if 'linux_release' in json:
+        # if 'linux_release' in json:
         #    counts.setdefault(repr(json['linux_release']), set()).add(report.user_id_hash)
         if not report.has_data():
             continue

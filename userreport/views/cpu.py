@@ -20,12 +20,12 @@ def report_cpu(request):
 
         cpu = {}
         for x in (
-            'x86_vendor', 'x86_model', 'x86_family',
-            'cpu_identifier', 'cpu_frequency',
-            'cpu_numprocs', 'cpu_numpackages', 'cpu_coresperpackage',
-            'cpu_logicalpercore',
-            'cpu_numcaches', 'cpu_pagesize', 'cpu_largepagesize',
-            'numa_numnodes', 'numa_factor', 'numa_interleaved',
+                'x86_vendor', 'x86_model', 'x86_family',
+                'cpu_identifier', 'cpu_frequency',
+                'cpu_numprocs', 'cpu_numpackages', 'cpu_coresperpackage',
+                'cpu_logicalpercore',
+                'cpu_numcaches', 'cpu_pagesize', 'cpu_largepagesize',
+                'numa_numnodes', 'numa_factor', 'numa_interleaved',
         ):
             try:
                 cpu[x] = data_json[x]
@@ -35,8 +35,8 @@ def report_cpu(request):
         cpu['os'] = report.get_os()
 
         def fmt_size(s):
-            if s % (1024*1024) == 0:
-                return "%d MB" % (s / (1024*1024))
+            if s % (1024 * 1024) == 0:
+                return "%d MB" % (s / (1024 * 1024))
             if s % 1024 == 0:
                 return "%d kB" % (s / 1024)
             return "%d B" % s
@@ -72,7 +72,7 @@ def report_cpu(request):
             caches = []
             while len(dcaches) or len(icaches):
                 if len(dcaches) and len(icaches) and \
-                   dcaches[0] == icaches[0] and dcaches[0]['type'] == 3:
+                                dcaches[0] == icaches[0] and dcaches[0]['type'] == 3:
                     caches.append(cb(dcaches[0], 'U'))
                     dcaches.pop(0)
                     icaches.pop(0)
@@ -106,4 +106,5 @@ def report_cpu(request):
         all_users.add(report.user_id_hash)
         cpus.setdefault(hashabledict(cpu), set()).add(report.user_id_hash)
 
-    return render_to_response('reports/cpu.html', {'cpus': cpus, 'x86_cap_descs': x86.cap_descs}, context_instance=RequestContext(request))
+    return render_to_response('reports/cpu.html', {'cpus': cpus, 'x86_cap_descs': x86.cap_descs},
+                              context_instance=RequestContext(request))

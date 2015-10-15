@@ -1,11 +1,9 @@
-from userreport.models import UserReport
-
 import hashlib
 import datetime
 import zlib
 
+from userreport.models import UserReport
 from django.http import HttpResponseBadRequest, HttpResponse, QueryDict
-
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
@@ -13,14 +11,13 @@ from django.views.decorators.http import require_http_methods
 @csrf_exempt
 @require_http_methods(['POST'])
 def report_upload(request):
-
     try:
         decompressed = zlib.decompress(request.body)
         POST = QueryDict(decompressed)
     except zlib.error:
         # If zlib can't decode it, assume it's an uncompressed POST
         POST = request.POST
-        
+
     try:
         user_id = POST['user_id']
         generation_date = datetime.datetime.utcfromtimestamp(int(POST['time']))

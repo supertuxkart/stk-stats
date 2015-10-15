@@ -1,14 +1,12 @@
-from userreport.models import UserReport
+import logging
 
+from userreport.models import UserReport
 from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
-
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.dates import DateFormatter
 import matplotlib.artist
-
-import logging
 
 LOG = logging.getLogger(__name__)
 

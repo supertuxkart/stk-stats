@@ -1,10 +1,9 @@
+import json
+
 from userreport.models import GraphicsDevice
 from userreport.util import hashabledict
-
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-
-import json
 
 
 def report_opengl_json(request):
@@ -25,7 +24,7 @@ def report_opengl_json(request):
         devices = [
             {'vendor': v, 'renderer': r, 'os': o, 'driver': d}
             for (v, r, o, d) in sorted(deviceset)
-        ]
+            ]
         data.append({'devices': devices, 'limits': limits, 'extensions': sorted(exts)})
     json_string = json.dumps(data, indent=1, sort_keys=True)
     return HttpResponse(json_string, content_type='text/plain')

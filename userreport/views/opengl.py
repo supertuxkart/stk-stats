@@ -1,7 +1,9 @@
+import re
+import logging
+
 from userreport.models import GraphicsDevice, GraphicsExtension, GraphicsLimit
 from userreport.util.gl import glext_versions
 from userreport.util import hashabledict
-
 from django.http import HttpResponseNotFound
 from django.db import connection
 from django.db.models import Sum
@@ -9,18 +11,16 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.cache import cache_page
 
-import re
-import logging
-
 LOG = logging.getLogger(__name__)
+
 
 @cache_page(60 * 120)
 def report_opengl_index(request):
-    num_users = GraphicsDevice.objects.\
+    num_users = GraphicsDevice.objects. \
         aggregate(Sum('usercount'))['usercount__sum']
 
-    exts = GraphicsExtension.objects.values('name').\
-        select_related('device').\
+    exts = GraphicsExtension.objects.values('name'). \
+        select_related('device'). \
         annotate(count=Sum('device__usercount')).values('name', 'count')
     all_exts = set(e['name'] for e in list(exts))
     ext_devices = {e['name']: e['count'] for e in list(exts)}
@@ -28,7 +28,7 @@ def report_opengl_index(request):
     limits = GraphicsLimit.objects.values('name')
     all_limits = set(l['name'] for l in list(limits))
 
-    devices = GraphicsDevice.objects.values('device_name').\
+    devices = GraphicsDevice.objects.values('device_name'). \
         annotate(count=Sum('usercount'))
     all_devices = {}
     for device in devices:
