@@ -1,6 +1,7 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     (r'^hwdetect/$', 'userreport.views_private.report_hwdetect'),
     (r'^hwdetect_test_data/$', 'userreport.views_private.report_hwdetect_test_data'),
     (r'^messages/$', 'userreport.views_private.report_messages'),

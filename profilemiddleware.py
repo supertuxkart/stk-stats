@@ -3,14 +3,15 @@
 import os
 import re
 import tempfile
-from cStringIO import StringIO
 
+from cStringIO import StringIO
 from django.conf import settings
 import hotshot
 import hotshot.stats
 
 COMMENT_SYNTAX = ((re.compile(r'^application/(.*\+)?xml|text/html$', re.I), '<!--', '-->'),
-                  (re.compile(r'^application/j(avascript|son)$',     re.I), '/*',   '*/' ))
+                  (re.compile(r'^application/j(avascript|son)$', re.I), '/*', '*/'))
+
 
 class ProfileMiddleware(object):
     def process_view(self, request, callback, args, kwargs):

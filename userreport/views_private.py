@@ -1,17 +1,15 @@
+import re
+import json
+
 from userreport.models import UserReport, UserReport_hwdetect
 from userreport.util import hashabledict
-
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db.models import Q
-
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-
-import re
 import numpy
-import json
 
 
 def render_reports(request, reports, template, args):
@@ -147,7 +145,7 @@ def report_performance(request):
         title = '%s %s' % (hwdetect['device'], profile['options'])
         datapoints.setdefault(title, []).append(fps)
 
-    #    return render_to_response('reports/performance.html', {'data': datapoints, 'reports': profiles})
+    # return render_to_response('reports/performance.html', {'data': datapoints, 'reports': profiles})
 
     sorted_datapoints = sorted(datapoints.items(), key=lambda kv: -numpy.median(kv[1]))
 

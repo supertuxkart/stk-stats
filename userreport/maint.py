@@ -101,7 +101,8 @@ def _save_devices(connection, devices):
 
                 # Add GraphicsLimit
                 if limits:
-                    sql_limits = sql_limit + ", ".join([sql_limit_value % (device_id, limit[0], limit[1]) for limit in limits])
+                    sql_limits = sql_limit + ", ".join(
+                        [sql_limit_value % (device_id, limit[0], limit[1]) for limit in limits])
                     cursor.execute(sql_limits)
 
             if count % 100 == 0:

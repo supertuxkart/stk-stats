@@ -6,9 +6,6 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    # Examples:
-    # url(r'^$', 'userstats.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', 'userreport.views.index', name='index'),
 

@@ -9,8 +9,10 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 # Add the name/ip of the server that is running the stats server
+# For development on localhost use this: ["localhost", "127.0.0.1"]
 ALLOWED_HOSTS = ["addons.supertuxkart.net"]
 
+# A tuple that lists people who get code error notifications.
 ADMINS = (
     ('Your Name', 'you@example.com'),
 )
