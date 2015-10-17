@@ -58,14 +58,14 @@ tr.data:hover {
     {% if is_extension %}
         <p><a href="{{ feature|glext_spec_link }}">View specification for {{ feature }}.</a></p>
 
-        <table class=support-status>
+        <table class="support-status">
             {% if values.true %}
                 <tr>
-                    <td colspan=4>
+                    <td colspan="4">
                         <h2>Supported by {{ usercounts.true }} user{{ usercounts.true|pluralize }}:</h2>
                     </td>
                 </tr>
-                <tr class=head>
+                <tr class="head">
                     <th>Vendor</th>
                     <th>Renderer</th>
                     <th>Users</th>
@@ -75,7 +75,7 @@ tr.data:hover {
                 {% for device in values.true|sorteddeviceitems %}
                     <tr class="data true{% cycle '' ' alt' %}">
                         <td>{{ device.0.vendor }}</td>
-                        <td class='bold'>
+                        <td class="bold">
                             <a href="{% url 'userreport.views.report_opengl_device' device.0.device %}"
                                     >{{ device.0.renderer }}</a>
                         </td>
@@ -94,11 +94,11 @@ tr.data:hover {
 
             {% if values.false %}
                 <tr>
-                    <td colspan=4>
+                    <td colspan="4">
                         <h2>Not supported by {{ usercounts.false }} user{{ usercounts.false|pluralize }}:</h2>
                     </td>
                 </tr>
-                <tr class=head>
+                <tr class="head">
                     <th>Vendor</th>
                     <th>Renderer</th>
                     <th>Users</th>
@@ -108,7 +108,7 @@ tr.data:hover {
                 {% for device in values.false|sorteddeviceitems %}
                     <tr class="data false{% cycle '' ' alt' %}">
                         <td>{{ device.0.vendor }}</td>
-                        <td class='bold'>
+                        <td class="bold">
                             <a href="{% url 'userreport.views.report_opengl_device' device.0.device %}">{{ device.0.renderer }}</a>
                         </td>
                         <td>{{ device.1.usercount }}</td>
@@ -127,12 +127,12 @@ tr.data:hover {
 
     {% else %}
 
-        <table class=support-status>
+        <table class="support-status">
             <tr>
                 <th>Value</th>
                 <th>Number of users</th>
             </tr>
-            {% for val in values.keys|sortreversed %}
+            {% for val in values.keys|sort_reversed %}
                 <tr>
                     <td>
                         <a href="#{{ val|urlencode }}">{{ val|default_if_none:"Unsupported/unknown" }}</a>
@@ -144,17 +144,17 @@ tr.data:hover {
             {% endfor %}
         </table>
 
-        <table class=support-status>
-            {% for val in values.keys|sortreversed %}
+        <table class="support-status">
+            {% for val in values.keys|sort_reversed %}
                 <tr>
-                    <td colspan=4 id="{{ val }}">
+                    <td colspan="4" id="{{ val }}">
                         <h2>
                             Value "{{ val|default_if_none:"Unsupported/unknown" }}" ({{ usercounts|dictget:val }}
                             user{{ usercounts|dictget:val|pluralize }}):
                         </h2>
                     </td>
                 </tr>
-                <tr class=head>
+                <tr class="head">
                     <th>Vendor</th>
                     <th>Renderer</th>
                     <th>Users</th>
@@ -164,7 +164,7 @@ tr.data:hover {
                 {% for device in values|dictget:val|sorteddeviceitems %}
                     <tr class="data{% cycle '' ' alt' %}">
                         <td>{{ device.0.vendor }}</td>
-                        <td class='bold'>
+                        <td class="bold">
                             <a href="{% url 'userreport.views.report_opengl_device' device.0.device %}"
                                     >{{ device.0.renderer }}</a>
                         </td>
@@ -173,7 +173,8 @@ tr.data:hover {
                         <td>
                             <ul>
                                 {% for driver in device.1.drivers|sort %}
-                                    <li>{{ driver }}{% endfor %}
+                                    <li>{{ driver }}</li>
+                                {% endfor %}
                             </ul>
                         </td>
                     </tr>

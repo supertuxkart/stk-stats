@@ -96,7 +96,7 @@ def sort(value):
 
 
 @register.filter
-def sortreversed(value):
+def sort_reversed(value):
     return reversed(sorted(value))
 
 

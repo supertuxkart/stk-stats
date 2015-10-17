@@ -3,15 +3,15 @@
 
 {% block content %}
     <table>
-        <th>
-        <th>Received</th>
-        <th>User</th>
-        <th>gfx_card</th>
-        <th>gfx_drv_ver</th>
-        <th>uname_machine</th>
-        <th>uname_release</th>
-        <th>uname_sysname</th>
-        <th>uname_version</th>
+        <tr>
+            <th>Received</th>
+            <th>User</th>
+            <th>gfx_card</th>
+            <th>gfx_drv_ver</th>
+            <th>uname_machine</th>
+            <th>uname_release</th>
+            <th>uname_sysname</th>
+            <th>uname_version</th>
         </tr>
         {% for report in report_page.object_list %}
             {% with json=report.data_json %}
