@@ -1,6 +1,6 @@
 from userreport.models import UserReport_hwdetect
 import userreport.x86 as x86
-from userreport.util import hashabledict
+from userreport.util import HashableDict
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -104,7 +104,7 @@ def report_cpu(request):
         cpu['caps'] = frozenset(caps)
 
         all_users.add(report.user_id_hash)
-        cpus.setdefault(hashabledict(cpu), set()).add(report.user_id_hash)
+        cpus.setdefault(HashableDict(cpu), set()).add(report.user_id_hash)
 
     return render_to_response('reports/cpu.html', {'cpus': cpus, 'x86_cap_descs': x86.cap_descs},
                               context_instance=RequestContext(request))

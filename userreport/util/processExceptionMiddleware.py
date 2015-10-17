@@ -2,7 +2,7 @@ import traceback
 import sys
 
 
-class ProcessExceptionMiddleware(object):
+class ProcessExceptionMiddleware:
     def process_exception(self, request, exception):
         print(exception)  # or log, or whatever.
 

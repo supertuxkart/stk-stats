@@ -3,7 +3,7 @@ import logging
 
 from userreport.models import GraphicsDevice, GraphicsExtension, GraphicsLimit
 from userreport.util.gl import glext_versions
-from userreport.util import hashabledict
+from userreport.util import HashableDict
 from django.http import HttpResponseNotFound
 from django.db import connection
 from django.db.models import Sum
@@ -71,7 +71,7 @@ def report_opengl_feature(request, feature):
             val = 'true' if val else 'false'
             all_values.add(val)
             usercounts[val] = usercounts.get(val, 0) + usercount
-            v = values.setdefault(val, {}).setdefault(hashabledict({
+            v = values.setdefault(val, {}).setdefault(HashableDict({
                 'vendor': vendor,
                 'renderer': renderer,
                 'os': os,
@@ -101,7 +101,7 @@ def report_opengl_feature(request, feature):
 
             all_values.add(val)
             usercounts[val] = usercounts.get(val, 0) + usercount
-            v = values.setdefault(val, {}).setdefault(hashabledict({
+            v = values.setdefault(val, {}).setdefault(HashableDict({
                 'vendor': vendor,
                 'renderer': renderer,
                 'os': os,
@@ -148,8 +148,8 @@ def report_opengl_devices(request, selected):
         all_limits |= set(limits.keys())
 
         devices.setdefault(
-            hashabledict({'device': report.device_name, 'os': report.os}), {}
-        ).setdefault((hashabledict(limits), exts), set()).add(report.driver)
+            HashableDict({'device': report.device_name, 'os': report.os}), {}
+        ).setdefault((HashableDict(limits), exts), set()).add(report.driver)
 
         gl_renderers.add(report.renderer)
 

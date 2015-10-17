@@ -1,7 +1,7 @@
 import json
 
 from userreport.models import GraphicsDevice
-from userreport.util import hashabledict
+from userreport.util import HashableDict
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 
@@ -15,7 +15,7 @@ def report_opengl_json(request):
         limits = dict((l.name, l.value) for l in report.graphicslimit_set.all())
 
         device = (report.vendor, report.renderer, report.os, report.driver)
-        devices.setdefault((hashabledict(limits), exts), set()).add(device)
+        devices.setdefault((HashableDict(limits), exts), set()).add(device)
 
     sorted_devices = devices.items()  # sorted(devices.items(), key=devices.items().get)
 

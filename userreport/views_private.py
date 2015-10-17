@@ -2,7 +2,7 @@ import re
 import json
 
 from userreport.models import UserReport, UserReport_hwdetect
-from userreport.util import hashabledict
+from userreport.util import HashableDict
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -201,7 +201,7 @@ def report_hwdetect_test_data(request):
             'GL_VERSION': data_json['GL_VERSION'],
             'GL_EXTENSIONS': data_json['GL_EXTENSIONS'],
         }
-        data.add(hashabledict(relevant))
+        data.add(HashableDict(relevant))
 
     data_json = json.dumps(list(data), indent=1, sort_keys=True)
     return HttpResponse('var hwdetectTestData = %s' % data_json, content_type='text/plain')
