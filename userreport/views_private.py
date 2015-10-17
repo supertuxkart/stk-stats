@@ -2,7 +2,7 @@ import re
 import json
 
 from userreport.models import UserReport, UserReport_hwdetect
-from userreport.util import HashableDict
+from userreport.util import HashableDict, convert_to_int, convert_to_float
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -14,10 +14,8 @@ import numpy
 
 def render_reports(request, reports, template, args):
     paginator = Paginator(reports, args.get('pagesize', 100))
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
+
+    page = convert_to_int(request.GET.get('page', '1'), 1)
 
     try:
         report_page = paginator.page(page)
@@ -139,7 +137,7 @@ def report_performance(request):
             continue
         if profile['time'] != 5:
             continue
-        if profile['msecs'] is None or float(profile['msecs']) == 0:
+        if profile['msecs'] is None or int(profile['msecs']) == 0:
             continue
         fps = 1000.0 / profile['msecs']
         title = '%s %s' % (hwdetect['device'], profile['options'])

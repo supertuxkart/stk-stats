@@ -3,7 +3,7 @@ import logging
 
 from userreport.models import GraphicsDevice, GraphicsExtension, GraphicsLimit
 from userreport.util.gl import glext_versions
-from userreport.util import HashableDict
+from userreport.util import HashableDict, convert_to_int, convert_to_float
 from django.http import HttpResponseNotFound
 from django.db import connection
 from django.db.models import Sum
@@ -79,8 +79,8 @@ def report_opengl_feature(request, feature):
             }), {'usercount': 0, 'drivers': set()})
             v['usercount'] += usercount
             v['drivers'].add(driver)
-
     else:
+        print('not is_extension')
         cursor.execute('''
             SELECT value, vendor, renderer, os, driver, device_name, usercount
             FROM userreport_graphicslimit l
@@ -91,13 +91,9 @@ def report_opengl_feature(request, feature):
 
         for val, vendor, renderer, os, driver, device_name, usercount in cursor:
             # Convert to int/float if possible, for better sorting
-            try:
-                val = int(val)
-            except ValueError:
-                try:
-                    val = float(val)
-                except ValueError:
-                    pass
+            val = convert_to_int(val)
+            if val is None:
+                val = convert_to_float(val)
 
             all_values.add(val)
             usercounts[val] = usercounts.get(val, 0) + usercount
