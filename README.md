@@ -42,9 +42,10 @@ Make sure you have created a database for yourself.
 
 Run `python manage.py migrate` to create your database.
 
+To collect all the static files (JS, CSS, Images), run `python manage.py collectstatic`.
+
 To start the Django development server, run `python manage.py runserver`.
 
-To collect all the static files (JS, CSS, Images), run `python manage.py collectstatic`.
 
 Submitting Data
 ===============
@@ -55,7 +56,7 @@ POST data:
  * user_id: Unique ID of the user
  * generation_date: Time report was generated, as a POSIX timestamp
  * data_type: Name of the report - in this case, `hwdetect`
- * data_version: Report version. OAD currently reports `11`
+ * data_version: Report version. SuperTuxKart currently reports `1`
  * data: A json string with all parameters of the report. See below for an incomplete example.
 
 ```JSON

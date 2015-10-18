@@ -8,18 +8,21 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 from userreport.settings_local \
     import DEBUG, TEMPLATE_DEBUG, ALLOWED_HOSTS, ADMINS, DATABASES, SECRET_KEY, \
     PROJECT_NAME, PROJECT_URL
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+# Points to userreport/
+PROJECT_ROOT = os.path.dirname(__file__)
 
+# Points to the parent of userreport, the root of the code
+ROOT = os.path.dirname(PROJECT_ROOT)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_ROOT = BASE_DIR + "/static/"
+STATIC_ROOT = ROOT + "/static/"
 STATIC_URL = "/static/"
 
 # Application definition
@@ -69,7 +72,7 @@ USE_L10N = True
 USE_TZ = True
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'userreport', 'templates'),
+    os.path.join(PROJECT_ROOT, 'templates'),
 )
 
 if not DEBUG:
@@ -103,7 +106,7 @@ LOGGING = {
         'logfile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR + "/log.log",
+            'filename': os.path.join(ROOT, 'log.log'),
             'maxBytes': 50000,
             'backupCount': 2,
             'formatter': 'standard',
