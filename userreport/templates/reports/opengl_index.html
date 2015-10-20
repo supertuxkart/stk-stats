@@ -35,116 +35,116 @@ ul {
 {% endblock %}
 
 {% block title %}
-    OpenGL capabilities database - index
+OpenGL capabilities database - index
 {% endblock %}
 
 {% block heading %}
-    OpenGL capabilities database
+OpenGL capabilities database
 {% endblock %}
 
 {% block content %}
-    <script>
-        function sort_by_percent(ul) {
-            var data = [];
-            var lis = ul.getElementsByTagName('li');
-            for (var i = 0; i < lis.length; ++i)
-                data.push([+lis[i].getAttribute('data-supportedby'), lis[i].getAttribute('data-extname'), lis[i]]);
-            data.sort(function (a, b) {
-                return b[0] - a[0] || (a[1] < b[1] ? -1 : b[1] < a[1] ? 1 : 0)
-            });
-            for (var i = 0; i < data.length; ++i)
-                ul.appendChild(data[i][2]);
-        }
+<script>
+    function sort_by_percent(ul) {
+        var data = [];
+        var lis = ul.getElementsByTagName('li');
+        for (var i = 0; i < lis.length; ++i)
+            data.push([+lis[i].getAttribute('data-supportedby'), lis[i].getAttribute('data-extname'), lis[i]]);
+        data.sort(function (a, b) {
+            return b[0] - a[0] || (a[1] < b[1] ? -1 : b[1] < a[1] ? 1 : 0)
+        });
+        for (var i = 0; i < data.length; ++i)
+            ul.appendChild(data[i][2]);
+    }
 
-        function sort_by_name(ul) {
-            var data = [];
-            var lis = ul.getElementsByTagName('li');
-            for (var i = 0; i < lis.length; ++i)
-                data.push([lis[i].getAttribute('data-extname'), lis[i]]);
-            data.sort(function (a, b) {
-                return (a[0] < b[0] ? -1 : b[0] < a[0] ? 1 : 0)
-            });
-            for (var i = 0; i < data.length; ++i)
-                ul.appendChild(data[i][1]);
-        }
-    </script>
+    function sort_by_name(ul) {
+        var data = [];
+        var lis = ul.getElementsByTagName('li');
+        for (var i = 0; i < lis.length; ++i)
+            data.push([lis[i].getAttribute('data-extname'), lis[i]]);
+        data.sort(function (a, b) {
+            return (a[0] < b[0] ? -1 : b[0] < a[0] ? 1 : 0)
+        });
+        for (var i = 0; i < data.length; ++i)
+            ul.appendChild(data[i][1]);
+    }
+</script>
 
-    <p>
-        Based on data submitted by players of <a href="{{ PROJECT_URL }}">{{ PROJECT_NAME }}</a>
-        See the <a href="{% url 'userreport.views.index' %}">index page</a> for more stuff.
-        Contact the {{ PROJECT_NAME }} <a href="mailto:supertuxkart-devel@lists.sourceforge.net">development team</a>
-        for
-        questions.
-    </p>
+<p>
+    Based on data submitted by players of <a href="{{ PROJECT_URL }}">{{ PROJECT_NAME }}</a>
+    See the <a href="{% url 'userreport.views.index' %}">index page</a> for more stuff.
+    Contact the {{ PROJECT_NAME }} <a href="mailto:supertuxkart-devel@lists.sourceforge.net">development team</a>
+    for
+    questions.
+</p>
 
-    <p>
-        Browse the data here, or download as <a href="{% url 'userreport.views.report_opengl_json' %}">JSON</a>
-        (see <a href="{% url 'userreport.views.report_opengl_json_format' %}">format description</a>).
-        Feel free to do whatever you want with the data.
-    </p>
+<p>
+    Browse the data here, or download as <a href="{% url 'userreport.views.report_opengl_json' %}">JSON</a>
+    (see <a href="{% url 'userreport.views.report_opengl_json_format' %}">format description</a>).
+    Feel free to do whatever you want with the data.
+</p>
 
-    <p>
-        The listed extensions are based on the GL_EXTENSIONS string:
-        we don't show an extension as supported if it's not explicitly advertised,
-        even if GL_VERSION is a version where that extension was folded into
-        the main spec.
-    </p>
+<p>
+    The listed extensions are based on the GL_EXTENSIONS string:
+    we don't show an extension as supported if it's not explicitly advertised,
+    even if GL_VERSION is a version where that extension was folded into
+    the main spec.
+</p>
 
-    <p>
-        The extension support percentages are based on the number of user/device/driver combinations,
-        from a total of {{ num_users }}. This is obviously hopelessly biased and unrepresentative
-        so don't read too much into the numbers.
-    </p>
+<p>
+    The extension support percentages are based on the number of user/device/driver combinations,
+    from a total of {{ num_users }}. This is obviously hopelessly biased and unrepresentative
+    so don't read too much into the numbers.
+</p>
 
-    <p>
-        The listed device names are based on GL_RENDERER, with boring components stripped out.
-        Driver versions on Windows are determined from DLL versions; if we can't guess which is the
-        correct DLL then we try to list all the detectable DLLs. Driver versions on Linux are determined
-        from GL_VERSION, when it's encoded in there.
-    </p>
+<p>
+    The listed device names are based on GL_RENDERER, with boring components stripped out.
+    Driver versions on Windows are determined from DLL versions; if we can't guess which is the
+    correct DLL then we try to list all the detectable DLLs. Driver versions on Linux are determined
+    from GL_VERSION, when it's encoded in there.
+</p>
 
-    <div class="col">
-        <h2>Extension support</h2>
-        Sort by
-        <a href="#" onclick="sort_by_percent(document.getElementById('extensions')); return false">% support</a> /
-        <a href="#" onclick="sort_by_name(document.getElementById('extensions')); return false">name</a>.
-        <ul id="extensions">
-            {% for ext in all_exts %}
-                <li data-supportedby="{{ ext_devices|dictget:ext }}" data-extname="{{ ext }}">
-                    <span class="progress" title="Percentage of users with this extension">
-                        <span class="bar" style="width:{% widthratio ext_devices|dictget:ext num_users 40 %}px">
-                            {% widthratio ext_devices|dictget:ext num_users 100 %}%
-                        </span>
+<div class="col">
+    <h2>Extension support</h2>
+    Sort by
+    <a href="#" onclick="sort_by_percent(document.getElementById('extensions')); return false">% support</a> /
+    <a href="#" onclick="sort_by_name(document.getElementById('extensions')); return false">name</a>.
+    <ul id="extensions">
+        {% for ext in all_exts %}
+            <li data-supportedby="{{ ext_devices|dictget:ext }}" data-extname="{{ ext }}">
+                <span class="progress" title="Percentage of users with this extension">
+                    <span class="bar" style="width:{% widthratio ext_devices|dictget:ext num_users 40 %}px">
+                        {% widthratio ext_devices|dictget:ext num_users 100 %}%
                     </span>
-                    (<a href="{{ ext|glext_spec_link }}" title="Link to specification">spec</a>)
-                    <a href="{% url 'userreport.views.report_opengl_feature' ext %}">{{ ext }}</a>
-                    {% if ext in ext_versions %}
-                        (~GL{{ ext_versions|dictget:ext }})
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+                </span>
+                (<a href="{{ ext|glext_spec_link }}" title="Link to specification">spec</a>)
+                <a href="{% url 'userreport.views.report_opengl_feature' ext %}">{{ ext }}</a>
+                {% if ext in ext_versions %}
+                    (~GL{{ ext_versions|dictget:ext }})
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 
-    <div class="col">
-        <h2>Implementation limits</h2>
-        <ul>
-            {% for limit in all_limits %}
-                <li>
-                    <a href="{% url 'userreport.views.report_opengl_feature' limit %}">{{ limit|prettify_gl_title }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+<div class="col">
+    <h2>Implementation limits</h2>
+    <ul>
+        {% for limit in all_limits %}
+            <li>
+                <a href="{% url 'userreport.views.report_opengl_feature' limit %}">{{ limit|prettify_gl_title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 
-    <div class="col">
-        <h2>Device details</h2>
-        <ul>
-            {% for device,users in all_devices|sorteditems %}
-                <li>
-                    <a href="{% url 'userreport.views.report_opengl_device' device %}">{{ device }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+<div class="col">
+    <h2>Device details</h2>
+    <ul>
+        {% for device,users in all_devices|sorteditems %}
+            <li>
+                <a href="{% url 'userreport.views.report_opengl_device' device %}">{{ device }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

@@ -2,80 +2,80 @@
 {% load report_tags %}
 
 {% block css %}
-    table.profile td {
-        line-height: inherit;
-        border-bottom: inherit;
-        padding: 0 1em 0 0.5em;
-    }
-    .treemarker {
-        color: #666;
-        font-family: monospace;
-        white-space: pre;
-    }
+table.profile td {
+    line-height: inherit;
+    border-bottom: inherit;
+    padding: 0 1em 0 0.5em;
+}
+.treemarker {
+    color: #666;
+    font-family: monospace;
+    white-space: pre;
+}
 {% endblock %}
 
 {% block title %}
-    CPU capabilities report
+CPU capabilities report
 {% endblock %}
 
 {% block heading %}
-    CPU capabilities
+CPU capabilities
 {% endblock %}
 
 {% block content %}
-    <p>Based on data submitted by players of <a href="{{ PROJECT_URL }}">{{ PROJECT_NAME }}</a></p>
-    <p>See the <a href="{% url 'userreport.views.index' %}">index page</a> for more stuff.</p>
+<p>Based on data submitted by players of <a href="{{ PROJECT_URL }}">{{ PROJECT_NAME }}</a></p>
+<p>See the <a href="{% url 'userreport.views.index' %}">index page</a> for more stuff.</p>
 
-    <table>
-        <tr>
-            <th>OS</th>
-            <th>Identifier</th>
-            <th><abbr title="Vendor/Model/Family">V/M/F</abbr></th>
-            <th>Freq</th>
-            <th>
-                <abbr title="Num packages &times; cores per package &times; logical processors per core = number of processors">
-                    Num procs
-                </abbr>
-            </th>
-            <th>Caches (data/instruction/unified)</th>
-            <th>TLBs</th>
-            <th>Feature bits</th>
-            <th>NUMA</th>
-        </tr>
-        {% for cpu,users in cpus|sortedcpuitems %}
-            <tr {% cycle 'class=alt' '' %}>
-                <td>{{ cpu.os }}</td>
-                <td>
-                    <nobr>{{ cpu.cpu_identifier }}</nobr>
-                </td>
-                <td>{{ cpu.x86_vendor }}/{{ cpu.x86_model }}/{{ cpu.x86_family }}</td>
-                <td>{% if cpu.cpu_frequency != -1 %} {{ cpu.cpu_frequency | cpufreqformat }} {% endif %}</td>
-                <td>{{ cpu.cpu_numpackages }}&times;{{ cpu.cpu_coresperpackage }}&times;{{ cpu.cpu_logicalpercore }}&nbsp;=&nbsp;{{ cpu.cpu_numprocs }}</td>
-                <td>
-                    <nobr>{{ cpu.caches|join:"<br>" }}</nobr>
-                </td>
-                <td>
-                    <nobr>{{ cpu.tlbs|join:"<br>" }}</nobr>
-                </td>
-                <td>
-                    {% for cap in cpu.caps|sort %}
-                        {% if cap in x86_cap_descs %}
-                            <abbr title="{{ x86_cap_descs|dictget:cap }}">{{ cap }}</abbr>
-                        {% else %}
-                            {{ cap }}
-                        {% endif %}
-                    {% endfor %}
-                </td>
-                <td>
-                    {% if cpu.numa_numnodes != 1 %}
-                        <nobr>
-                            Nodes: {{ cpu.numa_numnodes }}<br>
-                            Factor: {{ cpu.numa_factor|floatformat:3 }}<br>
-                            Interleaved: {{ cpu.numa_interleaved }}
-                        </nobr>
+<table>
+    <tr>
+        <th>OS</th>
+        <th>Identifier</th>
+        <th><abbr title="Vendor/Model/Family">V/M/F</abbr></th>
+        <th>Freq</th>
+        <th>
+            <abbr title="Num packages &times; cores per package &times; logical processors per core = number of processors">
+                Num procs
+            </abbr>
+        </th>
+        <th>Caches (data/instruction/unified)</th>
+        <th>TLBs</th>
+        <th>Feature bits</th>
+        <th>NUMA</th>
+    </tr>
+    {% for cpu,users in cpus|sortedcpuitems %}
+        <tr {% cycle 'class=alt' '' %}>
+            <td>{{ cpu.os }}</td>
+            <td>
+                <nobr>{{ cpu.cpu_identifier }}</nobr>
+            </td>
+            <td>{{ cpu.x86_vendor }}/{{ cpu.x86_model }}/{{ cpu.x86_family }}</td>
+            <td>{% if cpu.cpu_frequency != -1 %} {{ cpu.cpu_frequency | cpufreqformat }} {% endif %}</td>
+            <td>{{ cpu.cpu_numpackages }}&times;{{ cpu.cpu_coresperpackage }}&times;{{ cpu.cpu_logicalpercore }}&nbsp;=&nbsp;{{ cpu.cpu_numprocs }}</td>
+            <td>
+                <nobr>{{ cpu.caches|join:"<br>" }}</nobr>
+            </td>
+            <td>
+                <nobr>{{ cpu.tlbs|join:"<br>" }}</nobr>
+            </td>
+            <td>
+                {% for cap in cpu.caps|sort %}
+                    {% if cap in x86_cap_descs %}
+                        <abbr title="{{ x86_cap_descs|dictget:cap }}">{{ cap }}</abbr>
+                    {% else %}
+                        {{ cap }}
                     {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+                {% endfor %}
+            </td>
+            <td>
+                {% if cpu.numa_numnodes != 1 %}
+                    <nobr>
+                        Nodes: {{ cpu.numa_numnodes }}<br>
+                        Factor: {{ cpu.numa_factor|floatformat:3 }}<br>
+                        Interleaved: {{ cpu.numa_interleaved }}
+                    </nobr>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
 {% endblock %}
