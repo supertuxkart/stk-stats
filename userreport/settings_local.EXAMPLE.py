@@ -3,6 +3,9 @@
 PROJECT_NAME = 'SuperTuxKart'
 PROJECT_URL = 'http://supertuxkart.net/'
 
+# Enable JSON output view, may want to disable for performance reasons.
+ENABLE_JSON = False
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

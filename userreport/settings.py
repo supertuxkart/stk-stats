@@ -12,7 +12,7 @@ import os
 import sys
 from userreport.settings_local \
     import DEBUG, TEMPLATE_DEBUG, ALLOWED_HOSTS, ADMINS, DATABASES, SECRET_KEY, \
-    PROJECT_NAME, PROJECT_URL
+    PROJECT_NAME, PROJECT_URL, ENABLE_JSON
 
 # Points to userreport/
 PROJECT_ROOT = os.path.dirname(__file__)
