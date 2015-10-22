@@ -70,19 +70,20 @@ def report_cpu(request):
             dcaches = d[:]
             icaches = i[:]
             caches = []
-            while len(dcaches) or len(icaches):
-                if len(dcaches) and len(icaches) and \
+            while dcaches or icaches:
+                if dcaches and icaches and \
                                 dcaches[0] == icaches[0] and dcaches[0]['type'] == 3:
                     caches.append(cb(dcaches[0], 'U'))
                     dcaches.pop(0)
                     icaches.pop(0)
                 else:
-                    if len(dcaches):
+                    if dcaches:
                         caches.append(cb(dcaches[0], 'D'))
                         dcaches.pop(0)
-                    if len(icaches):
+                    if icaches:
                         caches.append(cb(icaches[0], 'I'))
                         icaches.pop(0)
+
             return tuple(caches)
 
         try:

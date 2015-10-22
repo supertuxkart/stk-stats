@@ -149,7 +149,7 @@ def report_opengl_devices(request, selected):
 
         gl_renderers.add(report.renderer)
 
-    if len(selected) == 1 and len(devices) == 0:
+    if len(selected) == 1 and not devices:
         return HttpResponseNotFound()
 
     all_limits = sorted(all_limits)
