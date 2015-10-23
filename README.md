@@ -151,3 +151,10 @@ system information from users. Instead, the `maint_graphics.py` script regenerat
 the report data. This script should be run regularly by a cron job, but note that
 it is a very expensive task.
 
+
+Common problems
+=================
+
+1. Admin `UserReportAdmin` error `Database returned an invalid value in QuerySet.dates(). Are time zone definitions 
+and pytz installed?`.
+To fix, run: `mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql -p`

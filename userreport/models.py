@@ -247,13 +247,25 @@ class GraphicsDevice(models.Model):
     driver = models.CharField(max_length=128)
     usercount = models.IntegerField()
 
+    def __str__(self):
+        return 'GraphicsDevice<name = "{0}", vendor = "{1}", renderer = "{2}", OS = "{3}", driver = "{4}", ' \
+               'usercount = {5}>'.format(self.device_name, self.vendor, self.renderer, self.os, self.driver,
+                                         self.usercount)
+
 
 class GraphicsExtension(models.Model):
     device = models.ForeignKey(GraphicsDevice)
     name = models.CharField(max_length=128, db_index=True)
+
+    def __str__(self):
+        return 'GraphicsExtension<device_id = "{0}", name = "{1}">'.format(self.device_id, self.name)
 
 
 class GraphicsLimit(models.Model):
     device = models.ForeignKey(GraphicsDevice)
     name = models.CharField(max_length=128, db_index=True)
     value = models.CharField(max_length=64)
+
+    def __str__(self):
+        return 'GraphicsLimit<device_id = "{0}", name = "{1}", value = "{2}">'.format(self.device_id, self.name,
+                                                                                      self.value)
