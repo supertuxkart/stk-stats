@@ -111,17 +111,17 @@ OpenGL capabilities database
     <a href="#" onclick="sort_by_percent(document.getElementById('extensions')); return false">% support</a> /
     <a href="#" onclick="sort_by_name(document.getElementById('extensions')); return false">name</a>.
     <ul id="extensions">
-        {% for ext in all_exts %}
-            <li data-supportedby="{{ ext_devices|dictget:ext }}" data-extname="{{ ext }}">
+        {% for name, count in all_exts %}
+            <li data-supportedby="{{ count }}" data-extname="{{ name }}">
                 <span class="progress" title="Percentage of users with this extension">
-                    <span class="bar" style="width:{% widthratio ext_devices|dictget:ext num_users 40 %}px">
-                        {% widthratio ext_devices|dictget:ext num_users 100 %}%
+                    <span class="bar" style="width:{% widthratio count num_users 40 %}px">
+                        {% widthratio count num_users 100 %}%
                     </span>
                 </span>
-                (<a href="{{ ext|glext_spec_link }}" title="Link to specification">spec</a>)
-                <a href="{% url 'userreport.views.report_opengl_feature' ext %}">{{ ext }}</a>
-                {% if ext in ext_versions %}
-                    (~GL{{ ext_versions|dictget:ext }})
+                (<a href="{{ name|glext_spec_link }}" title="Link to specification">spec</a>)
+                <a href="{% url 'userreport.views.report_opengl_feature' name %}">{{ name }}</a>
+                {% if name in ext_versions %}
+                    (~GL{{ ext_versions|dictget:name }})
                 {% endif %}
             </li>
         {% endfor %}
@@ -142,7 +142,7 @@ OpenGL capabilities database
 <div class="col">
     <h2>Device details</h2>
     <ul>
-        {% for device,users in all_devices|sorteditems %}
+        {% for device in all_devices %}
             <li>
                 <a href="{% url 'userreport.views.report_opengl_device' device %}">{{ device }}</a>
             </li>

@@ -1,12 +1,11 @@
 import re
 import logging
 
-from userreport.models import GraphicsDevice, GraphicsExtension, GraphicsLimit
+from userreport.models import GraphicsDevice
 from userreport.util.gl import glext_versions
 from userreport.util import HashableDict, convert_to_int, convert_to_float
 from django.http import HttpResponseNotFound
 from django.db import connection
-from django.db.models import Sum
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.cache import cache_page
@@ -16,32 +15,35 @@ LOG = logging.getLogger(__name__)
 
 @cache_page(60 * 120)
 def report_opengl_index(request):
-    num_users = GraphicsDevice.objects. \
-        aggregate(Sum('usercount'))['usercount__sum']
+    # TODO apply tables normalization, there are a lot of duplicate data
+    with connection.cursor() as cursor:
+        # Get the total user count
+        cursor.execute('SELECT SUM(`usercount`) FROM `userreport_graphicsdevice`')
+        num_users, = cursor.fetchone()
 
-    exts = GraphicsExtension.objects.values('name'). \
-        select_related('device'). \
-        annotate(count=Sum('device__usercount')).values('name', 'count')
-    all_exts = set(e['name'] for e in list(exts))
-    ext_devices = {e['name']: e['count'] for e in list(exts)}
+        # Get all distinct limits
+        cursor.execute('SELECT DISTINCT `name` FROM `userreport_graphicslimit` ORDER BY `name` ASC')
+        limits = [l for l, in cursor]
 
-    limits = GraphicsLimit.objects.values('name')
-    all_limits = set(l['name'] for l in list(limits))
+        # Get all distinct devices
+        cursor.execute('SELECT DISTINCT `device_name` FROM `userreport_graphicsdevice` ORDER BY `device_name` ASC')
+        devices = [d for d, in cursor]
 
-    devices = GraphicsDevice.objects.values('device_name'). \
-        annotate(count=Sum('usercount'))
-    all_devices = {}
-    for device in devices:
-        all_devices[device['device_name']] = device['count']
-
-    all_limits = sorted(all_limits)
-    all_exts = sorted(all_exts)
+        # Get all distinct extensions
+        cursor.execute('''
+            SELECT `GE`.`name`, SUM(`GD`.`usercount`) AS `count`
+                FROM `userreport_graphicsextension` `GE`
+                INNER JOIN `userreport_graphicsdevice` `GD`
+                    ON ( `GE`.`device_id` = `GD`.`id` )
+            GROUP BY `GE`.`name`
+            ORDER BY `GE`.`name`
+        ''')
+        extensions = [(name, count) for name, count, in cursor]
 
     return render_to_response('reports/opengl_index.html', {
-        'all_limits': all_limits,
-        'all_exts': all_exts,
-        'all_devices': all_devices,
-        'ext_devices': ext_devices,
+        'all_limits': limits,
+        'all_exts': extensions,
+        'all_devices': devices,
         'num_users': num_users,
         'ext_versions': glext_versions,
     }, context_instance=RequestContext(request))
@@ -80,7 +82,6 @@ def report_opengl_feature(request, feature):
             v['usercount'] += usercount
             v['drivers'].add(driver)
     else:
-        print('not is_extension')
         cursor.execute('''
             SELECT value, vendor, renderer, os, driver, device_name, usercount
             FROM userreport_graphicslimit l
