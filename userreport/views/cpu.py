@@ -1,17 +1,26 @@
+
+from userreport.settings import ENABLE_CPU
 from userreport.models import UserReport_hwdetect
 import userreport.x86 as x86
 from userreport.util import HashableDict
 
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.views.decorators.cache import cache_page
 
 
+@cache_page(60 * 120)
 def report_cpu(request):
+    if not ENABLE_CPU:
+        return HttpResponse('CPU reporting disabled.')
+
     reports = UserReport_hwdetect.objects
     reports = reports.filter(data_type='hwdetect', data_version__gte=1)
 
     all_users = set()
     cpus = {}
+    cap_bits, cap_descs, idx = x86.get_data()
 
     for report in reports:
         data_json = report.get_data_json(cache=False)
@@ -97,7 +106,7 @@ def report_cpu(request):
             continue  # skip missing data json key
 
         caps = set()
-        for (n, _, b) in x86.cap_bits:
+        for (n, _, b) in cap_bits:
             if n.endswith('[2]'):
                 continue
             if data_json['x86_caps[%d]' % (b / 32)] & (1 << (b % 32)):
@@ -107,5 +116,5 @@ def report_cpu(request):
         all_users.add(report.user_id_hash)
         cpus.setdefault(HashableDict(cpu), set()).add(report.user_id_hash)
 
-    return render_to_response('reports/cpu.html', {'cpus': cpus, 'x86_cap_descs': x86.cap_descs},
+    return render_to_response('reports/cpu.html', {'cpus': cpus, 'x86_cap_descs': cap_descs},
                               context_instance=RequestContext(request))

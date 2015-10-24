@@ -59,6 +59,8 @@ POST data:
  * data_version: Report version. SuperTuxKart currently reports `1`
  * data: A json string with all parameters of the report. See below for an incomplete example.
 
+STK has the `ENABLE_CPU` option disabled by default, see issue supertuxkart/stk-code#1587.
+
 ```JSON
 {"os_unix":1,
  "os_bsd":0,
@@ -156,5 +158,5 @@ Common problems
 =================
 
 1. Admin `UserReportAdmin` error `Database returned an invalid value in QuerySet.dates(). Are time zone definitions 
-and pytz installed?`.
+and pytz installed?`
 To fix, run: `mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql -p`

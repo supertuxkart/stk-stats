@@ -6,6 +6,9 @@ PROJECT_URL = 'http://supertuxkart.net/'
 # Enable JSON output view, may want to disable for performance reasons.
 ENABLE_JSON = False
 
+# Enable CPU output view, may want to disable for performance reasons.
+ENABLE_CPU = False
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
