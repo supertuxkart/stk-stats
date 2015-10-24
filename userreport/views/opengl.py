@@ -91,9 +91,10 @@ def report_opengl_feature(request, feature):
 
         for val, vendor, renderer, os, driver, device_name, usercount in cursor:
             # Convert to int/float if possible, for better sorting
-            val = convert_to_int(val)
-            if val is None:
-                val = convert_to_float(val)
+            new_value = convert_to_int(val)
+            if new_value is None:
+                new_value = convert_to_float(val)
+            val = new_value
 
             all_values.add(val)
             usercounts[val] = usercounts.get(val, 0) + usercount
