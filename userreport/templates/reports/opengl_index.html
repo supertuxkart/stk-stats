@@ -77,11 +77,13 @@ OpenGL capabilities database
     questions.
 </p>
 
-<p>
-    Browse the data here, or download as <a href="{% url 'userreport.views.report_opengl_json' %}">JSON</a>
-    (see <a href="{% url 'userreport.views.report_opengl_json_format' %}">format description</a>).
-    Feel free to do whatever you want with the data.
-</p>
+    {% if ENABLE_JSON %}
+        <p>
+            Browse the data here, or download as <a href="{% url 'userreport.views.report_opengl_json' %}">JSON</a>
+            (see <a href="{% url 'userreport.views.report_opengl_json_format' %}">format description</a>).
+            Feel free to do whatever you want with the data.
+        </p>
+    {% endif %}
 
 <p>
     The listed extensions are based on the GL_EXTENSIONS string:
