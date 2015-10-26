@@ -51,7 +51,6 @@ def report_opengl_index(request):
 
 @cache_page(60 * 120)
 def report_opengl_feature(request, feature):
-    all_values = set()
     usercounts = {}
     values = {}
 
@@ -71,7 +70,6 @@ def report_opengl_feature(request, feature):
 
         for vendor, renderer, os, driver, device_name, usercount, val in cursor:
             val = 'true' if val else 'false'
-            all_values.add(val)
             usercounts[val] = usercounts.get(val, 0) + usercount
             v = values.setdefault(val, {}).setdefault(HashableDict({
                 'vendor': vendor,
@@ -97,7 +95,6 @@ def report_opengl_feature(request, feature):
                 new_value = convert_to_float(val)
             val = new_value
 
-            all_values.add(val)
             usercounts[val] = usercounts.get(val, 0) + usercount
             v = values.setdefault(val, {}).setdefault(HashableDict({
                 'vendor': vendor,
@@ -112,10 +109,8 @@ def report_opengl_feature(request, feature):
         return HttpResponseNotFound()
 
     num_users = sum(usercounts.values())
-
     return render_to_response('reports/opengl_feature.html', {
         'feature': feature,
-        'all_values': all_values,
         'values': values,
         'is_extension': is_extension,
         'usercounts': usercounts,
