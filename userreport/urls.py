@@ -1,43 +1,37 @@
-from django.conf.urls import patterns, include, url
-
+from django.conf.urls import include, url
 from django.contrib import admin
+from userreport.settings import ENABLE_VIEWS
+from . import views
 
-admin.autodiscover()
-
-urlpatterns = patterns(
-    '',
-
-    url(r'^$', 'userreport.views.index', name='index'),
-
+urlpatterns = [
+    # API
     url(r'^upload/v1/$', 'userreport.views.report_upload', name='upload-v1'),
 
-    url(r'^opengl/$', 'userreport.views.report_opengl_index', name="report-opengl-index"),
+    # Index page
+    url(r'^$', views.index, name='index')
+]
 
-    url(r'^opengl/json$', 'userreport.views.report_opengl_json',
-        name='report-opengl-json'),
+if ENABLE_VIEWS:
+    urlpatterns.extend([
+        url(r'^opengl/$', views.report_opengl_index, name='report-opengl-index'),
 
-    url(r'^opengl/json/format$', 'userreport.views.report_opengl_json_format',
-        name='report-opengl-json-format'),
+        url(r'^opengl/json$', views.report_opengl_json, name='report-opengl-json'),
 
-    url(r'^opengl/feature/(?P<feature>[^/]+)$',
-        'userreport.views.report_opengl_feature',
-        name='report-opengl-feature'),
+        url(r'^opengl/json/format$', views.report_opengl_json_format, name='report-opengl-json-format'),
 
-    url(r'^opengl/device/(?P<device>.+)$',
-        'userreport.views.report_opengl_device',
-        name='report-opengl-device'),
+        url(r'^opengl/feature/(?P<feature>[^/]+)$', views.report_opengl_feature, name='report-opengl-feature'),
 
-    url(r'^opengl/device', 'userreport.views.report_opengl_device_compare',
-        name='report-opengl-device-compare'),
+        url(r'^opengl/device/(?P<device>.+)$', views.report_opengl_device, name='report-opengl-device'),
 
-    url(r'^cpu/$', 'userreport.views.report_cpu', name='report-cpu'),
+        url(r'^opengl/device', views.report_opengl_device_compare, name='report-opengl-device-compare'),
 
-    url(r'^ram/$', 'userreport.views.report_ram', name='report-ram'),
+        url(r'^cpu/$', views.report_cpu, name='report-cpu'),
 
-    url(r'^os/$', 'userreport.views.report_os', name='report-os'),
+        url(r'^ram/$', views.report_ram, name='report-ram'),
 
-    url(r'^usercount/$', 'userreport.views.report_user_count',
-        name='report-usercount'),
+        url(r'^os/$', views.report_os, name='report-os'),
 
-    url(r'^admin/', include(admin.site.urls)),
-)
+        url(r'^usercount/$', views.report_user_count, name='report-usercount'),
+
+        url(r'^admin/', include(admin.site.urls))
+    ])

@@ -24,3 +24,8 @@ env/
 # Project specific
 static/
 settings_local.py
+
+
+# Other files
+stats.txt
+cprofile.txt

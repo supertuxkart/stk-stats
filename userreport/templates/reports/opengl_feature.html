@@ -53,7 +53,7 @@ OpenGL capabilities report: {{ feature }}
 {% endblock %}
 
 {% block content %}
-<p>(<a href="{% url 'userreport.views.report_opengl_index' %}">Back to index page.</a>)</p>
+<p>(<a href="{% url 'report-opengl-index' %}">Back to index page.</a>)</p>
 
 {% if is_extension %}
     <p><a href="{{ feature|glext_spec_link }}">View specification for {{ feature }}.</a></p>
@@ -76,7 +76,7 @@ OpenGL capabilities report: {{ feature }}
                 <tr class="data true{% cycle '' ' alt' %}">
                     <td>{{ device.0.vendor }}</td>
                     <td class="bold">
-                        <a href="{% url 'userreport.views.report_opengl_device' device.0.device %}">
+                        <a href="{% url 'report-opengl-device' device.0.device %}">
                             {{ device.0.renderer }}
                         </a>
                     </td>
@@ -110,7 +110,7 @@ OpenGL capabilities report: {{ feature }}
                 <tr class="data false{% cycle '' ' alt' %}">
                     <td>{{ device.0.vendor }}</td>
                     <td class="bold">
-                        <a href="{% url 'userreport.views.report_opengl_device' device.0.device %}">
+                        <a href="{% url 'report-opengl-device' device.0.device %}">
                             {{ device.0.renderer }}
                         </a>
                     </td>
@@ -168,7 +168,7 @@ OpenGL capabilities report: {{ feature }}
                 <tr class="data{% cycle '' ' alt' %}">
                     <td>{{ device.0.vendor }}</td>
                     <td class="bold">
-                        <a href="{% url 'userreport.views.report_opengl_device' device.0.device %}">
+                        <a href="{% url 'report-opengl-device' device.0.device %}">
                             {{ device.0.renderer }}
                         </a>
                     </td>

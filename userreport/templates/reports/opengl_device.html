@@ -32,7 +32,7 @@ OpenGL capabilities report
 {% endblock %}
 
 {% block content %}
-<p>(<a href="{% url 'userreport.views.report_opengl_index' %}">Back to index page.</a>)</p>
+<p>(<a href="{% url 'report-opengl-index' %}">Back to index page.</a>)</p>
 
 <p>The table here shows the features reported for devices with the following GL_RENDERER strings:</p>
 <ul>
@@ -76,7 +76,7 @@ OpenGL capabilities report
         <tr title="{{ ext }}">
             <th>
                 <nobr>
-                    <a href="{% url 'userreport.views.report_opengl_feature' ext %}">{{ ext }}</a>
+                    <a href="{% url 'report-opengl-feature' ext %}">{{ ext }}</a>
                     <a href="{{ ext|glext_spec_link }}">(spec)</a>
                 </nobr>
             </th>
@@ -91,7 +91,7 @@ OpenGL capabilities report
         <tr title="{{ limit }}">
             <th>
                 <nobr>
-                    <a href="{% url 'userreport.views.report_opengl_feature' limit %}">
+                    <a href="{% url 'report-opengl-feature' limit %}">
                         {{ limit|prettify_gl_title }}
                     </a>
                 </nobr>
@@ -107,7 +107,7 @@ OpenGL capabilities report
 </table>
 
 <h2>Compare with other devices</h2>
-<form action="{% url 'userreport.views.report_opengl_device_compare' %}" method="get">
+<form action="{% url 'report-opengl-device-compare' %}" method="get">
     <ul>
         {% for d in all_devices|sort %}
             <li>

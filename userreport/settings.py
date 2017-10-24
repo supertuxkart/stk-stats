@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import sys
 from userreport.settings_local \
-    import DEBUG, TEMPLATE_DEBUG, ALLOWED_HOSTS, ADMINS, DATABASES, SECRET_KEY, \
-    PROJECT_NAME, PROJECT_URL, ENABLE_JSON, ENABLE_CPU
+    import DEBUG, ALLOWED_HOSTS, ADMINS, DATABASES, SECRET_KEY, \
+    PROJECT_NAME, PROJECT_URL, ENABLE_JSON, ENABLE_CPU, ENABLE_VIEWS
 
 # Points to userreport/
 PROJECT_ROOT = os.path.dirname(__file__)
@@ -43,6 +43,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'userreport.util.processExceptionMiddleware.ProcessExceptionMiddleware',
 )
 
@@ -50,17 +51,34 @@ ROOT_URLCONF = 'userreport.urls'
 
 WSGI_APPLICATION = 'userreport.wsgi.application'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.tz',
-    'django.contrib.messages.context_processors.messages',
-    'userreport.context_processors.site_constants',
-)
-
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            # insert your TEMPLATE_DIRS here
+            os.path.join(PROJECT_ROOT, 'templates')
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'userreport.context_processors.site_constants',
+            ],
+            # 'loaders': [
+            #     # insert your TEMPLATE_LOADERS here
+            # ],
+            'debug': DEBUG
+        }
+    }
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -70,10 +88,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, 'templates'),
-)
 
 if not DEBUG:
     CACHES = {

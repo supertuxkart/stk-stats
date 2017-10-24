@@ -3,6 +3,9 @@
 PROJECT_NAME = 'SuperTuxKart'
 PROJECT_URL = 'http://supertuxkart.net/'
 
+# Are we also showing the views besides only having the API
+ENABLE_VIEWS = False
+
 # Enable JSON output view, may want to disable for performance reasons.
 ENABLE_JSON = False
 
@@ -10,9 +13,7 @@ ENABLE_JSON = False
 ENABLE_CPU = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-TEMPLATE_DEBUG = True
+DEBUG = False
 
 # Add the name/ip of the server that is running the stats server
 # For development on localhost use this: ["localhost", "127.0.0.1"]
@@ -24,8 +25,7 @@ ADMINS = (
 )
 
 # Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
+# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

@@ -1,12 +1,22 @@
-from django.conf.urls import patterns
+from django.conf.urls import include, url
+from userreport.settings import ENABLE_VIEWS
+from . import views_private
 
-urlpatterns = patterns(
-    '',
-    (r'^hwdetect/$', 'userreport.views_private.report_hwdetect'),
-    (r'^hwdetect_test_data/$', 'userreport.views_private.report_hwdetect_test_data'),
-    (r'^messages/$', 'userreport.views_private.report_messages'),
-    (r'^profile/$', 'userreport.views_private.report_profile'),
-    (r'^performance/$', 'userreport.views_private.report_performance'),
-    (r'^gfx/$', 'userreport.views_private.report_gfx'),
-    (r'^user/([0-9a-f]+)$', 'userreport.views_private.report_user'),
-)
+urlpatterns = []
+
+if ENABLE_VIEWS:
+    urlpatterns.extend([
+        url(r'^hwdetect/$', views_private.report_hwdetect),
+
+        url(r'^hwdetect_test_data/$', views_private.report_hwdetect_test_data),
+
+        url(r'^messages/$', views_private.report_messages),
+
+        url(r'^profile/$', views_private.report_profile),
+
+        url(r'^performance/$', views_private.report_performance),
+
+        url(r'^gfx/$', views_private.report_gfx),
+
+        url(r'^user/([0-9a-f]+)$', views_private.report_user, name='report-user'),
+    ])

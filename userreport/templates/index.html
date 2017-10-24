@@ -10,13 +10,18 @@
     }
 </style>
 
-<p>This site collects opt-out automatic feedback from players of <a href="{{ PROJECT_URL }}">{{ PROJECT_NAME }}</a></p>
-<p>Published data:
-    <a href="{% url 'userreport.views.report_opengl_index' %}">OpenGL capabilities</a>.
-    {% if ENABLE_CPU %}
-        <a href="{% url 'userreport.views.report_cpu' %}">CPU features</a>.
-    {% endif %}
-    <a href="{% url 'userreport.views.report_ram' %}">Memory</a>.
-    <a href="{% url 'userreport.views.report_os' %}">Operating System</a>.
-    <a href="{% url 'userreport.views.report_user_count' %}">User count</a>.
-</p>
+{% if ENABLE_VIEWS %}
+    <p>This site collects opt-out automatic feedback from players of <a href="{{ PROJECT_URL }}">{{ PROJECT_NAME }}</a></p>
+    <p>Published data:
+        <a href="{% url 'report-opengl-index' %}">OpenGL capabilities</a>.
+        {% if ENABLE_CPU %}
+            <a href="{% url 'report-cpu' %}">CPU features</a>.
+        {% endif %}
+        <a href="{% url 'report-ram' %}">Memory</a>.
+        <a href="{% url 'report-os' %}">Operating System</a>.
+        <a href="{% url 'report-usercount' %}">User count</a>.
+    </p>
+{% else %}
+    <p>Views disabled, only the API is enabled.</p>
+{% endif %}
+

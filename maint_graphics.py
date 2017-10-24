@@ -2,13 +2,12 @@
 
 import os
 import time
-
 import django
+from userreport import maint
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'userreport.settings'
 django.setup()
 
-from userreport import maint
 
 start_time = time.time()
 remove_time, get_time, save_time = maint.refresh_data()

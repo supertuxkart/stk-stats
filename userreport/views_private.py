@@ -26,11 +26,11 @@ def render_reports(request, reports, template, args):
     return render_to_response(template, args)
 
 
-def report_user(request, user):
+def report_user(request, user_id_hash):
     reports = UserReport.objects.order_by('-upload_date')
-    reports = reports.filter(user_id_hash=user)
+    reports = reports.filter(user_id_hash=user_id_hash)
 
-    return render_reports(request, reports, 'reports/user.html', {'user': user})
+    return render_reports(request, reports, 'reports/user.html', {'user': user_id_hash})
 
 
 def report_messages(request):

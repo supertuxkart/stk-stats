@@ -27,7 +27,8 @@ table.profile td {
 {% with json=report.data_json %}
   <tr {% cycle 'class=alt' '' %}>
     <td>{{ report.upload_date|date:"Y-m-d" }}&nbsp;{{ report.upload_date|date:"H:i:s" }}
-    <td><a href="{% url userreport.views_private.report_user report.user_id_hash %}"><abbr title="{{ report.user_id_hash }}">{{ report.user_id_hash|slice:"0:8" }}</abbr></a>
+    <td><a href="{% url 'report_user' user_id_hash=report.user_id_hash %}"><abbr title="{{ report.user_id_hash }}"
+    >{{ report.user_id_hash|slice:"0:8" }}</abbr></a>
     <td>
 <p>Time: {{ json.time }}
 <p>Map: {{ json.map }}

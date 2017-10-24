@@ -71,7 +71,7 @@ OpenGL capabilities database
 
 <p>
     Based on data submitted by players of <a href="{{ PROJECT_URL }}">{{ PROJECT_NAME }}</a>
-    See the <a href="{% url 'userreport.views.index' %}">index page</a> for more stuff.
+    See the <a href="{% url 'index' %}">index page</a> for more stuff.
     Contact the {{ PROJECT_NAME }} <a href="mailto:supertuxkart-devel@lists.sourceforge.net">development team</a>
     for
     questions.
@@ -79,8 +79,8 @@ OpenGL capabilities database
 
     {% if ENABLE_JSON %}
         <p>
-            Browse the data here, or download as <a href="{% url 'userreport.views.report_opengl_json' %}">JSON</a>
-            (see <a href="{% url 'userreport.views.report_opengl_json_format' %}">format description</a>).
+            Browse the data here, or download as <a href="{% url 'report-opengl-json' %}">JSON</a>
+            (see <a href="{% url 'report-opengl-json-format' %}">format description</a>).
             Feel free to do whatever you want with the data.
         </p>
     {% endif %}
@@ -119,7 +119,7 @@ OpenGL capabilities database
                     </span>
                 </span>
                 (<a href="{{ name|glext_spec_link }}" title="Link to specification">spec</a>)
-                <a href="{% url 'userreport.views.report_opengl_feature' name %}">{{ name }}</a>
+                <a href="{% url 'report-opengl-feature' name %}">{{ name }}</a>
                 {% if name in ext_versions %}
                     (~GL{{ ext_versions|dictget:name }})
                 {% endif %}
@@ -133,7 +133,7 @@ OpenGL capabilities database
     <ul>
         {% for limit in all_limits %}
             <li>
-                <a href="{% url 'userreport.views.report_opengl_feature' limit %}">{{ limit|prettify_gl_title }}</a>
+                <a href="{% url 'report-opengl-feature' limit %}">{{ limit|prettify_gl_title }}</a>
             </li>
         {% endfor %}
     </ul>
@@ -144,7 +144,7 @@ OpenGL capabilities database
     <ul>
         {% for device in all_devices %}
             <li>
-                <a href="{% url 'userreport.views.report_opengl_device' device %}">{{ device }}</a>
+                <a href="{% url 'report-opengl-device' device %}">{{ device }}</a>
             </li>
         {% endfor %}
     </ul>

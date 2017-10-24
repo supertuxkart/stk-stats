@@ -1,5 +1,4 @@
 import json
-
 from userreport.settings import ENABLE_JSON
 from userreport.models import GraphicsDevice
 from userreport.util import HashableDict
