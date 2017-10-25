@@ -1,4 +1,11 @@
 Django==1.8.8
+django-extensions==1.9.6
 PyMySQL==0.6.7
+pydotplus==2.0.2
 matplotlib==1.4.3
-numpy==1.10.1
+numpy==1.13.3
+python3-memcached==1.51
+requests==2.18.4
+Werkzeug==0.12.2
+pyOpenSSL==17.3.0
+

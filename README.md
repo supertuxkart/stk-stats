@@ -1,12 +1,10 @@
-Statistics Browser
-==================
+# Statistics Browser
 
 This repository has been forked from the 0 A.D. project.
 The intent is to use this as a base for a statistics collection
 system for SuperTuxKart.
 
-Installation
-============
+# Installation
 
 Before proceeding, install the following packages using your favorite package
 manager:
@@ -29,10 +27,18 @@ is difficult to install via `pip`, so you may want to create a virtualenv with
 site-packages available to it.
 
 From the repository root, run:
-```
+```bash
 virtualenv -p /usr/bin/python3 venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
+
+In a production env use (with the www-data user):
+```bash
+cd /var/www/stk-stats
+sudo -u www-data virtualenv -p /usr/bin/python3 venv
+sudo -u www-data source venv/bin/activate
+sudo -u www-data venv/bin/pip install -r requirements.txt
 ```
 
 Copy `userreport/settings_local.EXAMPLE.py` to `userreport/settings_local.py`, and
@@ -40,15 +46,47 @@ edit the settings inside that file to match your environment.
 
 Make sure you have created a database for yourself.
 
-Run `python manage.py migrate` to create your database.
+Then run the following commands to complete installation:
+```bash
+# create your database
+python manage.py migrate
+# collect all the static files (JS, CSS, Images)
+python manage.py collectstatic
+# run dev server
+python manage.py runserver_plus
+```
 
-To collect all the static files (JS, CSS, Images), run `python manage.py collectstatic`.
+# Manage commands
 
-To start the Django development server, run `python manage.py runserver`.
+- Create database from Model files:
+```bash
+python manage.py migrate
+```
 
+- Collect all the static files (JS, CSS, Images) into the `static/` dir:
+```bash
+python manage.py collectstatic
+```
 
-Submitting Data
-===============
+- Run development server (automatically reloads on file modifications):
+```bash
+python manage.py runserver_plus
+```
+
+- Run interactive shell:
+```bash
+python manage.py shell_plus
+```
+
+- Check for problems
+```bash
+python manage.py check
+python manage.py validate_templates
+python manage.py pipchecker
+```
+
+# Submitting Data
+
 
 This tool supports one report, called `hwdetect`. This report consists of the following
 POST data:
