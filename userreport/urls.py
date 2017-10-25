@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
+from django.views.generic.base import RedirectView
 from django.contrib import admin
-from userreport.settings import ENABLE_VIEWS
+from userreport.settings import ENABLE_VIEWS, STATIC_URL
 from . import views
 
 urlpatterns = [
@@ -8,7 +9,13 @@ urlpatterns = [
     url(r'^upload/v1/$', 'userreport.views.report_upload', name='upload-v1'),
 
     # Index page
-    url(r'^$', views.index, name='index')
+    url(r'^$', views.index, name='index'),
+
+    # Favicon
+    url(r'^favicon\.ico$', RedirectView.as_view(url=STATIC_URL + 'favicon.ico', permanent=True)),
+
+    # robots.txt
+    url(r'^robots\.txt$', RedirectView.as_view(url=STATIC_URL + 'robots.txt', permanent=True)),
 ]
 
 if ENABLE_VIEWS:

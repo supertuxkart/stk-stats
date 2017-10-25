@@ -15,14 +15,14 @@ from userreport.settings_local \
     PROJECT_NAME, PROJECT_URL, ENABLE_JSON, ENABLE_CPU, ENABLE_VIEWS
 
 # Points to userreport/
-PROJECT_ROOT = os.path.dirname(__file__)
+USERREPORT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Points to the parent of userreport, the root of the code
-ROOT = os.path.dirname(PROJECT_ROOT)
+PROJECT_ROOT = os.path.dirname(USERREPORT_ROOT)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_ROOT = ROOT + "/static/"
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "static")
 STATIC_URL = "/static/"
 
 # Application definition
@@ -57,7 +57,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             # insert your TEMPLATE_DIRS here
-            os.path.join(PROJECT_ROOT, 'templates')
+            os.path.join(USERREPORT_ROOT, 'templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -121,7 +121,7 @@ LOGGING = {
         'logfile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(ROOT, 'log.log'),
+            'filename': os.path.join(PROJECT_ROOT, 'log.log'),
             'maxBytes': 50000,
             'backupCount': 2,
             'formatter': 'standard',
